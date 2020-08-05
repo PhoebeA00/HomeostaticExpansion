@@ -90,7 +90,8 @@ P5=polyfit(day,infected,5);
 P3t=polyval(P3,t);
 P4t=polyval(P4,t);
 P5t=polyval(P5,t);
-
+options = odeset('RelTol',1e-6,'AbsTol',1e-6); %These are options for the ode solver
+[t d]=ode45('SIR',[0 15],Init,options); 
 Ipch=pchip(day,infected,t);
 
 figure(4)

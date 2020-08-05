@@ -4,7 +4,7 @@ output: html_notebook
 ---
 ```{r}
 #Preparing the data and the function
-source('~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/popCount_V2.R')
+source('~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/popCount_V2.R')
 library(ggplot2)
 ```
 
@@ -124,11 +124,14 @@ ThymWeight = subset(pop, Organ == "Thymus")
 SplnWeightKO = subset(pop, Organ == "Spleen" & OrganWeight < 0.79 & Genotype == "KO")
 SplnWeightWT = subset(pop, Organ == "Spleen" & OrganWeight < 0.79 & Genotype == "WT")
 #There is an outlier in the spleen weight
-SplnWeight 
+
 plot(ThymWeight$Age,ThymWeight$OrganWeight)
 plot(SplnWeight$Age, SplnWeight$OrganWeight)
 plot(SplnWeightKO$Age, SplnWeightKO$OrganWeight)
-plot(SplnWeightWT$Age, SplnWeightWT$OrganWeight)
+plot(SplnWeightWT$Age, SplnWeightWT$OrganWeight,
+     xlab = 'Age in Days',
+     ylab = 'Weight in Grams',
+     main = 'Weight of WT Thymus')
 
 #plot the cell counts
 #
@@ -224,8 +227,8 @@ ggplot(popThym, aes(x=Age, y=OrganWeight, colour=Genotype, group=Genotype)) +
   geom_point(size=3)+
   theme_bw() + 
   xlab("Age in Days") +
-  ylab("Activated CD4 T cell counts in 10^6") +
-  ggtitle("Total Activated CD4 T cells") + 
+  ylab("Thymus Weighs in grams") +
+  ggtitle("Thymus Weighs in grams") + 
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold"),
         plot.title = element_text( size = 20, face = "bold")
@@ -237,6 +240,12 @@ outlier = subset(popThym, OrganWeight > 0.24)
 
 
 
+```{r}
+popThymWT = subset(popThym, Genotype == "WT")
+popThymWT_DataForMatlab = data.frame(popThymWT$Age, popThymWT$OrganWeight)
+popThymWT_DataForMatlab = na.omit(popThymWT_DataForMatlab)
+write.csv(popThymWT_DataForMatlab, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/Fitting/V2/ThymusData.csv')
+```
 
 #Comparing regression of two different trend lines
 
@@ -326,15 +335,18 @@ ggplot(popSpln, aes(x=Age, y=TotalLiveCountInMillions, colour=Genotype, group=Ge
 
 
 
-#Plotting CD4 T cells all ages, pre 12, post 9
+#Plotting Spleen CD4,CD8 cells all ages, pre 12
 ```{r}
 #Guide I am using - http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 #Now to get the error bars
-source("~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/popCount_V2.R")
+source("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/popCount_V2.R")
 library("Rmisc")
 SpleenOnly = subset(pop, Organ == "Spleen")
-CD4ct <- summarySE(SpleenOnly, measurevar="CD4CT", groupvars=c("Age","Genotype"))
 
+### CD4
+
+CD4ct <- summarySE(SpleenOnly, measurevar="CD4CT", groupvars=c("Age","Genotype"))
+pd <- position_dodge(0.1)
 ggplot(CD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) + 
   geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
@@ -344,13 +356,53 @@ ggplot(CD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) +
         axis.title=element_text(size=18,face="bold"),
         plot.title = element_text( size = 20, face = "bold"))
 
+
+
+### CD8
+
+CD8ct <- summarySE(SpleenOnly, measurevar="CD8ct", groupvars=c("Age","Genotype"))
+
+ggplot(CD8ct, aes(x=Age, y=CD8ct, colour=Genotype, group=Genotype)) + 
+  geom_errorbar(aes(ymin=CD8ct-se, ymax=CD8ct+se), colour="black", width=.1, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3) +
+  labs(title = "Total CD8 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  theme(axis.text=element_text(size=14),
+        axis.title=element_text(size=18,face="bold"),
+        plot.title = element_text( size = 20, face = "bold"))
+
+
+
+
+#######################
+#
+#   Pre-9
+#
+#######################
+
 SpleenPre12 <- subset(SpleenOnly, intage < 12)
+
+### CD4
+
+
 CD4ctpre12 <- summarySE(SpleenPre12, measurevar="CD4CT", groupvars=c("Age","Genotype"))
 ggplot(CD4ctpre12, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) + 
   geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd, size=3) +
   labs(title = "Total CD4 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  theme(axis.text=element_text(size=14),
+        axis.title=element_text(size=18,face="bold"),
+        plot.title = element_text( size = 20, face = "bold"))
+
+### CD8
+
+CD8ctpre12 <- summarySE(SpleenPre12, measurevar="CD8ct", groupvars=c("Age","Genotype"))
+ggplot(CD8ctpre12, aes(x=Age, y=CD8ct, colour=Genotype, group=Genotype)) + 
+  geom_errorbar(aes(ymin=CD8ct-se, ymax=CD8ct+se), colour="black", width=.1, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3) +
+  labs(title = "Total CD8 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=18,face="bold"),
         plot.title = element_text( size = 20, face = "bold"))
@@ -366,3 +418,36 @@ ggplot(CD4ctpre12, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) +
 
 
 
+
+#Plotting Thymus CD4,CD8 cells all ages, pre 12, post 9
+```{r}
+source("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/popCount_V2.R")
+library("Rmisc")
+ThymusOnly = subset(pop, Organ == "Thymus")
+ThyCD4ct <- summarySE(ThymusOnly, measurevar="CD4CT", groupvars=c("Age","Genotype"))
+pd <- position_dodge(0.1)
+ggplot(ThyCD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) + 
+  geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3) +
+  labs(title = "Total CD4 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  theme(axis.text=element_text(size=14),
+        axis.title=element_text(size=18,face="bold"),
+        plot.title = element_text( size = 20, face = "bold"))
+
+###########
+# CD8
+###########
+
+ThyCD8ct <- summarySE(ThymusOnly, measurevar="CD8ct", groupvars=c("Age","Genotype"))
+pd <- position_dodge(0.1)
+ggplot(ThyCD8ct, aes(x=Age, y=CD8ct, colour=Genotype, group=Genotype)) + 
+  geom_errorbar(aes(ymin=CD8ct-se, ymax=CD8ct+se), colour="black", width=.1, position=pd) +
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3) +
+  labs(title = "Total CD8 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  theme(axis.text=element_text(size=14),
+        axis.title=element_text(size=18,face="bold"),
+        plot.title = element_text( size = 20, face = "bold"))
+
+```

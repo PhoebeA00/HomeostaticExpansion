@@ -6,7 +6,7 @@ require(plyr)
 #pc = read.csv('/media/jon/Seagate Expansion Drive/ModelData/Version8_Batchprocsesing.csv', header = T)
 #pc = read.csv('/ModelData/Version8_Batchprocsesing.csv', header = T)
 #pc = read.csv('/ModelData/Version8_Batchprocsesing_0-9.csv', header = T)
-pop = read.csv('~/my.work/PhD/Homestatic Expansion Project/ModelData/Version8_Batchprocsesing.csv', header = T, blank.lines.skip = TRUE)
+pop = read.csv('~/my.work/PhD/HomestaticExpansionProject/ModelData/Version8_Batchprocsesing.csv', header = T, blank.lines.skip = TRUE)
 ####For my laptop#####
 #setwd('/media/jon/Seagate Expansion Drive/ModelData/PlotsAll/')
 ##Remove extra data
@@ -77,7 +77,7 @@ pop$X8TregProlCT = pop$X8TregProlRatio * pop$X8TregCT
 
 #Fixing the CD69 data that Genevieve gave me
 #empty strings need to be filled with NA
-CD69df = read.csv("~/my.work/PhD/Homestatic Expansion Project/T cell Activation Summary_Jon.csv", header = FALSE, na.strings=c("","NA"))
+CD69df = read.csv("~/my.work/PhD/HomestaticExpansionProject/T cell Activation Summary_Jon.csv", header = FALSE, na.strings=c("","NA"))
 #has a weird first row with one entry saying "CD69.Data.Summary", so I'm removing it, and the row with names
 CD69df = CD69df[-(1:2),]
 #Removing an empty column
@@ -114,8 +114,8 @@ CD69df$Genotype[CD69df$Genotype == "IL-2-HET"] = "WT"
 ####################
 
 
-write.csv(pop, '~/my.work/PhD/Homestatic Expansion Project/ModelData/AfterCalculations.csv')
-write.csv(CD69df, '~/my.work/PhD/Homestatic Expansion Project/ModelData/CD69DataFromGen.csv')
+write.csv(pop, '~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv')
+write.csv(CD69df, '~/my.work/PhD/HomestaticExpansionProject/ModelData/CD69DataFromGen.csv')
 
 
 
