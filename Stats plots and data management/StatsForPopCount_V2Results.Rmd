@@ -2,6 +2,7 @@
 title: "R Notebook"
 output: html_notebook
 ---
+#Source for popcount
 ```{r}
 #Preparing the data and the function
 source('~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/popCount_V2.R')
@@ -152,8 +153,9 @@ ggplot(data=ThymWeight, aes(x=Age, y=OrganWeight)) +
 #Getting Treg values that did not come from the thymus
 ```{r}
 #Plotting and Continuously working with data
-source("~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/popCount_V2.R")
-source("~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/FunctionsData.R")
+#source("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/popCount_V2.R")
+#source("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/FunctionsData.R")
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
 library(dplyr)
 library("Rmisc")
 library("reshape2")
@@ -203,7 +205,7 @@ ggplot(TregError, aes(x=Age, y=X4TregRatio, colour=Genotype, group=Genotype)) +
   labs(title = "Treg Population Percentage in the Spleen", y = "Percent", x = "Age in Days")+
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=18,face="bold"),
-        plot.title = element_text( size = 20, face = "bold")
+        plot.title = element_text( size = 15, face = "bold")
         )
 
 ggplot(popNoIncS, aes(x=Age, y=Diff, colour=Genotype, group=Genotype)) + 
@@ -219,27 +221,7 @@ ggplot(popNoIncS, aes(x=Age, y=X4TregFromThymus, colour=Genotype, group=Genotype
 
 ```
 
-#Plotting Thymus weights between Wt KO
-
-```{r}
-popThym = subset(pop, Organ == "Thymus")
-ggplot(popThym, aes(x=Age, y=OrganWeight, colour=Genotype, group=Genotype)) + 
-  geom_point(size=3)+
-  theme_bw() + 
-  xlab("Age in Days") +
-  ylab("Thymus Weighs in grams") +
-  ggtitle("Thymus Weighs in grams") + 
-  theme(axis.text=element_text(size=14),
-        axis.title=element_text(size=16,face="bold"),
-        plot.title = element_text( size = 20, face = "bold")
-        )
-
-outlier = subset(popThym, OrganWeight > 0.24)
-```
-
-
-
-
+#Prepping Thymus data for matlab
 ```{r}
 popThymWT = subset(popThym, Genotype == "WT")
 popThymWT_DataForMatlab = data.frame(popThymWT$Age, popThymWT$OrganWeight)
@@ -267,8 +249,9 @@ write.csv(popThymWT_DataForMatlab, '~/my.work/PhD/HomestaticExpansionProject/Cod
 ```
 
 ```{r}
+
 #Actually calculating the regression lines and getting p values
-source("~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/popCount_V2.R")
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
 #Subsetting WT and KO - Removing the ones older than 56 because those we are not considering
 popWT = subset(pop, Genotype == "WT" & intage < 56)
 popKO = subset(pop, Genotype == "KO")
@@ -322,7 +305,6 @@ ggplot(popKO, aes(x=intage, y=CD4Ratio)) +
 
 ```{r}
 popSpln = subset(pop, Organ == "Spleen")
-pop$TotalLiveCountInMillions
 pd <- position_dodge(0.1)
 ggplot(popSpln, aes(x=Age, y=TotalLiveCountInMillions, colour=Genotype, group=Genotype)) + 
   geom_point(position=pd, size=3) +
@@ -348,10 +330,10 @@ SpleenOnly = subset(pop, Organ == "Spleen")
 CD4ct <- summarySE(SpleenOnly, measurevar="CD4CT", groupvars=c("Age","Genotype"))
 pd <- position_dodge(0.1)
 ggplot(CD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) + 
-  geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
+  #geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd, size=3) +
-  labs(title = "Total CD4 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  labs(title = "Total CD4 T Cells (10^6)", y = "Counts", x = "Age in Days") + 
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=18,face="bold"),
         plot.title = element_text( size = 20, face = "bold"))
@@ -430,7 +412,7 @@ ggplot(ThyCD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) +
   geom_errorbar(aes(ymin=CD4CT-se, ymax=CD4CT+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd, size=3) +
-  labs(title = "Total CD4 T Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  labs(title = "Total CD4 T Cells (10^6)", y = "Counts", x = "Age in Days") + 
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=18,face="bold"),
         plot.title = element_text( size = 20, face = "bold"))
@@ -451,3 +433,59 @@ ggplot(ThyCD8ct, aes(x=Age, y=CD8ct, colour=Genotype, group=Genotype)) +
         plot.title = element_text( size = 20, face = "bold"))
 
 ```
+#Naive T cell plots
+```{r}
+DataForModel = read.csv("~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedDataForModel_WTSPLEEN.csv")
+
+ggplot(DataForModel, aes(x=Age, y=NaiveT_Cells, colour=Genotype, group=Genotype)) + 
+  geom_point(position=pd, size=3) +
+  labs(title = "Total Naive T Cell Counts WT", y = "Counts", x = "Age in Days") + 
+  theme(axis.text=element_text(size=14),
+        axis.title=element_text(size=18,face="bold"),
+        plot.title = element_text( size = 20, face = "bold"))
+
+```
+#Stats for Thymus Weight between WT and IL-2 KO
+```{r}
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
+popThym = subset(pop, Organ == "Thymus")
+popThym18WT = subset(popThym, intage == 18 & Genotype == "WT")
+# popThym18WT = subset(popThym18WT, OrganWeight >5.5)
+popThym18KO = subset(popThym, intage == 18 & Genotype == "KO")
+t.test(popThym18WT$OrganWeight, popThym18KO$OrganWeight)
+
+popThym18WT$OrganWeight = popThym18WT$OrganWeight * 100
+sd(popThym18WT$OrganWeight)
+
+popThym18KO$OrganWeight = popThym18KO$OrganWeight * 100
+sd(popThym18KO$OrganWeight)
+
+popThym14WT = subset(popThym, intage == 14 & Genotype == "WT")
+popThym14KO = subset(popThym, intage == 14 & Genotype == "KO")
+t.test(popThym14WT$OrganWeight, popThym14KO$OrganWeight)
+length(popThym18KO$OrganWeight)
+
+
+```
+
+
+#Stats for Spleen Weight Between WT and IL-2 KO
+```{r}
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
+popSpln = subset(pop, Organ == "Spleen")
+
+pop12SplnWT = subset(popSpln, intage == 12 & Genotype == "WT")
+pop12SplnKO = subset(popSpln, intage == 12 & Genotype == "KO")
+t.test(pop12SplnWT$OrganWeight,pop12SplnKO$OrganWeight )
+
+pop14SplnWT = subset(popSpln, intage == 14 & Genotype == "WT")
+pop14SplnKO = subset(popSpln, intage == 14 & Genotype == "KO")
+t.test(pop14SplnWT$OrganWeight,pop14SplnKO$OrganWeight )
+
+pop18SplnWT = subset(popSpln, intage == 18 & Genotype == "WT")
+pop18SplnKO = subset(popSpln, intage == 18 & Genotype == "KO")
+t.test(pop18SplnWT$OrganWeight,pop18SplnKO$OrganWeight )
+
+
+```
+

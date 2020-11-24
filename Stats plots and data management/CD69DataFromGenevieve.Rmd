@@ -9,7 +9,7 @@ library("ggplot2")
 ```{r}
 #Fixing the CD69 data that Genevieve gave me
 #empty strings need to be filled with NA
-CD69df = read.csv("~/my.work/PhD/Homestatic Expansion Project/T cell Activation Summary_Jon.csv", header = FALSE, na.strings=c("","NA"))
+CD69df = read.csv("~/my.work/PhD/HomestaticExpansionProject/T cell Activation Summary_Jon.csv", header = FALSE, na.strings=c("","NA"))
 #has a weird first row with one entry saying "CD69.Data.Summary", so I'm removing it, and the row with names
 CD69df = CD69df[-(1:2),]
 #Removing an empty column
@@ -60,14 +60,15 @@ pd <- position_dodge(0.1)
 
 ggplot(cd4cd69, aes(x=Age, y=CD4CD69_pct, colour=Genotype, group=Genotype)) + 
     geom_errorbar(aes(ymin=CD4CD69_pct-sd, ymax=CD4CD69_pct+sd), colour="black", width=.1, position=pd) +
-    geom_line(position=pd) +
-    geom_point(position=pd, size=3)
+  geom_line(position=pd) +
+  geom_point(position=pd, size=3) +
+  labs(title = "CD4CD69+ Percent sdbar")
 
 ggplot(cd4cd69, aes(x=Age, y=CD4CD69_pct, colour=Genotype, group=Genotype)) + 
   geom_errorbar(aes(ymin=CD4CD69_pct-se, ymax=CD4CD69_pct+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd, size=3) +
-  labs(title = "Percentage of CD4CD69+ T cells", y = "Percent", x = "Age in Days")+
+  labs(title = "Percentage of CD4CD69+ T cells sebar", y = "Percent", x = "Age in Days")+
   theme(axis.text=element_text(size=14),
         axis.title=element_text(size=18,face="bold"),
         plot.title = element_text( size = 20, face = "bold")
@@ -91,6 +92,15 @@ ggplot(CD4ct, aes(x=Age, y=CD4CT, colour=Genotype, group=Genotype)) +
 
 
 ```
+#Plotting CD62L
+```{r}
+colnames(CD69df)
+ggplot(data=CD69df, aes(x=Age, y=CD4CD44CD62L_pct)) +
+  geom_point(position = position_dodge(width = 0.8), aes(color = Genotype), size = 3)+
+  labs(title = "CD4CD44CD62L+ Percentage")
+
+```
+
 #Getting Treg data for Genevieve
 ```{r}
 ############################################################
@@ -166,10 +176,7 @@ lm(CD69WT$CD4CD69_pct ~ poly(CD69WT$Age,2))
 
 ```{r}
 library(ggplot2)
-ActCD4 = read.csv('~/my.work/PhD/Homestatic Expansion Project/ModelData/ActivatedCD4pop.csv')
-```
-
-```{r}
+ActCD4 = read.csv('~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv')
 ggplot(ActCD4, aes(intage, CD4CT, colour=Genotype, fill=Genotype)) +
   geom_smooth(method="lm") +
   geom_point(size=3) +
@@ -182,7 +189,6 @@ ggplot(ActCD4, aes(intage, CD4CT, colour=Genotype, fill=Genotype)) +
         axis.title=element_text(size=16,face="bold"),
         plot.title = element_text( size = 20, face = "bold")
         )
-ActivatedData$ActivatedCD4CT
 ggplot(ActCD4, aes(intage, ActivatedCD4CT, colour=Genotype, fill=Genotype)) +
   geom_smooth(method="lm") +
   geom_point(size=3) +
@@ -203,7 +209,7 @@ ggplot(SumActivCD4, aes(x=intage, y=ActivatedCD4CT, colour=Genotype, group=Genot
   geom_errorbar(aes(ymin=ActivatedCD4CT-se, ymax=ActivatedCD4CT+se), colour="black", width=.1, position=pd) +
   geom_line(position=pd) +
   geom_point(position=pd, size=3) +
-  labs(title = "Total CD4CD9+ Cells in the 10^6 with SE bars", y = "Counts", x = "Age in Days") + 
+  labs(title = "Total CD4CD69+ Cells (10^6)", y = "Counts", x = "Age in Days") + 
   theme(axis.text=element_text(size=14), 
         axis.title=element_text(size=18,face="bold"), 
         plot.title = element_text( size = 20, face = "bold"))

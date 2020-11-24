@@ -1,13 +1,18 @@
 function obj= GrowthObjective(p)
 %load data
-Data = readtable('../RawData/ActivatedDataForModel_WTSPLEEN.csv');
-CellData = Data(:,{'NaiveT_Cells', 'Activated_Cells', ...                  
-     'X4Treg_Cells', 'hours'}); 
+Data = readtable('../RawData/ActivatedWTSpleen.csv');
+CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
+     'hours'}); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%% Make all changes here for optimization %%%%%%%%%%%%%%%%%
 %                                                               %
-DataUsed = [1, 3]; % Naive = 1, Activ = 2, Treg = 3, hours = 4   %
+DataUsed = [1, 2, 3]; 
+% 1 = Naive CD4 T cells from Thymus
+% 2 = Activated CD4 cells
+% 3 = All Tregs
+% 4 = Hours
+% 5 = Naive Derived Tregs (only for the c parameter)
 %The data location is equivalent in the ModelData df            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,10 +30,9 @@ for i = DataUsed
     SimulationData = ModelData(:,i);
     
     
-    for j = 1:length(DataHours)
-        
+    for j = 1:length(DataHours)                
       
-        hour = DataHours(j);
+        hour = DataHours(j);        
         CellDataIndex = Cells.hours == hour;
         CellDataForRSqr = Cells{CellDataIndex,1}; %Do not need hours anymore
         SimulationValue = SimulationData(hour);
@@ -37,8 +41,8 @@ for i = DataUsed
         for h = 1:length(CellDataForRSqr)
             
             CellValue = CellDataForRSqr(h);
-            RSquareValue = (SimulationValue - CellValue).^2;
-            %RSquareValue = ((SimulationValue - CellValue)./CellValue).^2;
+            %RSquareValue = (SimulationValue - CellValue).^2;
+            RSquareValue = ((SimulationValue - CellValue)./CellValue).^2;
             Rsquare = Rsquare + RSquareValue;
            
         end

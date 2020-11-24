@@ -1,13 +1,17 @@
 function dTdt = Growth(t, x, p, i)
-global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
+%global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
+global epsilon c b_R mu beta g d f n
+
 %Getting all parameter values
 
 %%%%%%%% Make all changes here for optimization %%%%%%%%%%%%%%%%%
 %                                                               %
-%Prmt = GetParameters(10); %Adjust parameter choice here %%%%%%%%%
-alpha = p(1);
-mu = p(2);                                                      %
-%
+a = p(1);
+b_T = p(2);
+e_T = p(3);
+e_R = p(4);
+kA = p(5);
+alpha = p(6);
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

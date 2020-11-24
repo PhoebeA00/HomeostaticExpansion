@@ -86,8 +86,7 @@ summary(lin6)$coefficients[2]
 ```{r}
 #The data i made using a python script which is found in the Rscript folder
 ActivatedData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
-#Calculating the naive T cell counts
-ActivatedData$NaiveT = ActivatedData$CD4CT - ActivatedData$ActivatedCD4CT
+
 #Spleen and WT/KO splitting
 ActivatedSpleenWT = subset(ActivatedData, Organ == "Spleen" & Genotype == "WT")
 ActivatedSpleenKO = subset(ActivatedData, Organ == "Spleen" & Genotype == "KO")
@@ -95,6 +94,8 @@ ActivatedSpleenKO = subset(ActivatedData, Organ == "Spleen" & Genotype == "KO")
 #Checking to see if the differences in date 'look' significant - it does.
 #plot(ActivatedSpleenWT$intage, ActivatedSpleenWT$ActivatedCD4CT)
 #plot(ActivatedSpleenKO$intage, ActivatedSpleenKO$ActivatedCD4CT)
+#Making data into solid counts, not 10^6
+ActivatedSpleenWT$ActivatedCD4CT = ActivatedSpleenWT$ActivatedCD4CT * 10**6
 
 #0-A WT & KO
 lin1<-lm(data=ActivatedSpleenWT, ActivatedCD4CT~intage)
@@ -123,15 +124,18 @@ summary(lin5)$coefficients[2]
 lin6 = lm(data = ActivatedSpleenKO012, ActivatedCD4CT~intage)
 summary(lin6)$coefficients[2]
 
-######Getting naive T
+#########
 #
+#   Getting naive T
 #
+#######
+ActivatedSpleenWT$NaiveTCT = ActivatedSpleenWT$NaiveTCT * 10**6
 
 #0-A WT & KO
-lin7<-lm(data=ActivatedSpleenWT, NaiveT~intage)
+lin7<-lm(data=ActivatedSpleenWT, NaiveTCT~intage)
 summary(lin7)$coefficients[2]
 
-lin8 = lm(data = ActivatedSpleenKO, NaiveT~intage)
+lin8 = lm(data = ActivatedSpleenKO, NaiveTCT~intage)
 summary(lin8)$coefficients[2]
 
 #0-9 WT & KO
@@ -160,15 +164,15 @@ summary(lin12)$coefficients[2]
 
 #Getting Treg Rates
 ```{r}
-source("~/my.work/PhD/Homestatic Expansion Project/Code/Rscripts/popCount_V2.R")
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
 
 #Splitting Spleen WT and KO
 WTSpleen = subset(pop, Organ == "Spleen" & Genotype == "WT")
 KOSpleen = subset(pop, Organ == "Spleen" & Genotype == "KO")
 
 #0-A WT and KO
-
-lin1<-lm(data=WTSpleen, X4TregCT~intage)
+WTSpleenno56 = subset(WTSpleen, intage < 50)
+lin1<-lm(data=WTSpleenno56, X4TregCT~intage)
 summary(lin1)$coefficients[2]
 
 lin2 = lm(data = KOSpleen, X4TregCT~intage)
@@ -198,7 +202,7 @@ summary(lin6)$coefficients[2]
 ```
 #Getting Treg Rates - With Activated Data
 ```{r}
-ActivatedData = read.csv("/home/jon/my.work/PhD/Homestatic Expansion Project/ModelData/ActivatedCD4pop.csv")
+ActivatedData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
 
 #Splitting Spleen WT and KO
 WTSpleen = subset(ActivatedData, Organ == "Spleen" & Genotype == "WT")
@@ -265,6 +269,9 @@ summary(lin5)$coefficients[2]
 ActivatedData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
 ThymusOnly = subset(ActivatedData, Organ == "Thymus")
 WTThymus = subset(ThymusOnly, Genotype == "WT")
+#Changing the weight of Thymus from grams to milligrams
+WTThymus$OrganWeight = WTThymus$OrganWeight * 10**3
+
 #Fits a straight line so we can get the slope of that line
 
 #CD4 Count in WT and KO
@@ -280,9 +287,11 @@ ActivatedData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/Model
 SpleenOnly = subset(ActivatedData, Organ == "Spleen")
 WTSpleen = subset(SpleenOnly, Genotype == "WT")
 
+#Change values to 10**6 format
+WTSpleen$X4TregProlCT = WTSpleen$X4TregProlCT * 10**6
+WTSpleen$CD4ProlCT = WTSpleen$CD4ProlCT * 10**6
+
 #Getting the Treg data
-
-
 #Fits a straight line so we can get the slope of that line
 #CD4 Count in WT and KO
 lin1<-lm(data=WTSpleen, X4TregProlCT~intage)
@@ -313,8 +322,8 @@ SpleenOnly = SpleenOnly[!is.na(SpleenOnly$X.CD4.Treg.dead), ]
 # SpleenOnly$X.CD4.Treg.dead
 
 #Calculating CD4 and Treg dead
-SpleenOnly$DeadCD4.CT = SpleenOnly$X.CD4.dead * SpleenOnly$CD4CT
-SpleenOnly$DeadTreg.CT = SpleenOnly$X.CD4.Treg.dead * SpleenOnly$X4TregCT
+SpleenOnly$DeadCD4.CT = SpleenOnly$X.CD4.dead * SpleenOnly$CD4CT * 10**6
+SpleenOnly$DeadTreg.CT = SpleenOnly$X.CD4.Treg.dead * SpleenOnly$X4TregCT * 10**6
 
 
 #Fits a straight line so we can get the slope of that line

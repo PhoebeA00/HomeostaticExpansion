@@ -1,16 +1,20 @@
-%% This is the main script for calculating the Residuals of all the data
+%% Plotting the naive derived Tregs, parameter c, entry number 18
+
+
+% This is the main script for calculating the Residuals of all the data
 %Gets residuals for all data types
-%The data location is equivalent in the ModelData df
+
 close all; clear all; clc
 
-Data = readtable('../RawData/ActivatedDataForModel_WTSPLEEN.csv');
-CellData = Data(:,{'NaiveT_Cells', 'Activated_Cells', ...                  
-     'X4Treg_Cells', 'hours'});
+Data = readtable('../RawData/ActivatedWTSpleen.csv');
+CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
+     'hours'});
+ 
 tx = 1:432;
 
 DataUsed = [1, 2, 3]; % Naive = 1, Activ = 2, Treg = 3, hours = 4
 
-ModelData = Plot_Simulation(16); %Give the parameter set to be explored here
+ModelData = Plot_Simulation(25); %Give the parameter set to be explored here
 
 %Setting up the hours
 DataHours = unique(CellData.hours);
@@ -63,26 +67,25 @@ end
 Residuals.Properties.VariableNames = {'N', 'T', 'R', 'hour'};
 disp('Ready to Plot!')
 
-%%
 
 figure(1)
 
 %Simulation and Data
 
 subplot(2,3,1)
-scatter(CellData.hours, CellData.NaiveT_Cells)
+scatter(CellData.hours, CellData.NaiveCT)
 hold on 
 plot(tx, ModelData(:,1))
 title('Naive T Cells')
 
 subplot(2,3,2)
-scatter(CellData.hours, CellData.Activated_Cells)
+scatter(CellData.hours, CellData.ActivatedCD4CT)
 hold on
 plot(tx, ModelData(:,2))
 title('Activated T cells')
 
 subplot(2,3,3)
-scatter(CellData.hours, CellData.X4Treg_Cells)
+scatter(CellData.hours, CellData.AllTregs)
 hold on
 plot(tx,ModelData(:,3))
 title('T Regulatory Cells')
@@ -93,20 +96,25 @@ subplot(2,3,4)
 scatter(Residuals.hour, Residuals.N)
 hold on
 yline(0)
-title('Naive T cells')
+title('Residuals Naive T cells')
 
 subplot(2,3,5)
 scatter(Residuals.hour, Residuals.T)
 hold on
 yline(0)
-title('Activated T Cells')
+title('Residuals Activated T Cells')
 
 subplot(2,3,6)
 scatter(Residuals.hour, Residuals.R)
 hold on
 yline(0)
-title('T Regulator Cells')
+title('Residuals Tregs')
 
+
+figure(2)
+
+plot(tx,ModelData(:,4))
+title('IL-2')
 %% Plotting Thymus results vs data to see if everything is ok
 
 ModelThymus = ModelData(:,5); 
@@ -115,3 +123,5 @@ ThymusData = readtable('../Data/ThymusData.csv');
 scatter(ThymusData.Hours, ThymusData.Weight, 'o')
 hold on
 plot(tx, ModelThymus)
+
+

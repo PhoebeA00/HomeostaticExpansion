@@ -6,7 +6,8 @@ require(plyr)
 #pc = read.csv('/media/jon/Seagate Expansion Drive/ModelData/Version8_Batchprocsesing.csv', header = T)
 #pc = read.csv('/ModelData/Version8_Batchprocsesing.csv', header = T)
 #pc = read.csv('/ModelData/Version8_Batchprocsesing_0-9.csv', header = T)
-pop = read.csv('~/my.work/PhD/HomestaticExpansionProject/ModelData/Version8_Batchprocsesing.csv', header = T, blank.lines.skip = TRUE)
+pop = read.csv('~/my.work/PhD/HomestaticExpansionProject/ModelData/Version8_Batchprocsesing.csv', 
+               header = T, blank.lines.skip = TRUE)
 ####For my laptop#####
 #setwd('/media/jon/Seagate Expansion Drive/ModelData/PlotsAll/')
 ##Remove extra data
@@ -57,16 +58,42 @@ pop$BprolCT = pop$BProlRatio * pop$Bct
 pop$X4TregProlCT = pop$X4TregProlRatio * pop$X4TregCT
 pop$X8TregProlCT = pop$X8TregProlRatio * pop$X8TregCT
 
-####### TCRb ADD THIS LATER
-# pop[14:56] <- lapply(pop[14:56], as.numeric)
-#pop[, 14:56][is.na(pop[,14:56])] <- 0
-#d21 = subset(dat, Age == '21')
-# colnames(pop)
-# "CD4ActivCT"              
-# "CD4PnACT"
-# d18 = subset(pop, Age == 18)
-# write.csv(pop, '~/my.work/PhD/Data/Work with Thad/PopulationsCalculated.csv')
 
+####################################################
+# Calculating the Tregs derived from Naive T cells #
+####################################################
+
+library(dplyr)
+library("Rmisc")
+library("reshape2")
+#Need to remove dates that are not symmetrical for subtractions - Dates are 2/25/2018 and 12/6/2017
+#There is a missing thymus and only one thymus for one of the dates - Incomplete data
+
+popNoInc <- pop[!(pop$intage == 18 & pop$expDate=="2/25/2018" | pop$expDate=="12/6/2017"),]
+
+#Works fine with day 0, I don't remember what the problem was
+#day 0 screwing with the data
+#popNoInc = popNoInc[!(popNoInc$Age == "0"),]
+
+#A d56 spleen doesn't have a thymus partner
+popNoInc = popNoInc[!(popNoInc$FileID == "JA022518WK8M1WTS"),]
+
+#Grouping and then subtracting Thymus treg freq from Spleen
+popNoInc = popNoInc %>%
+  group_by(Age, Genotype, expDate) %>% #expDate is to subtract only by the thymus from the same experiment
+  mutate(NaiveDerivedTregsRatio = X4TregRatio - X4TregRatio[Organ == 'Thymus'])
+#Tregs derived from the Thymus
+popNoInc$ThymusDerivedTregRatio = popNoInc$X4TregRatio - popNoInc$NaiveDerivedTregsRatio
+#Replacing the Negative Values with 0
+popNoInc$NaiveDerivedTregsRatio[popNoInc$NaiveDerivedTregsRatio < 0] <- 0
+
+#Calculating the Counts for modeling
+popNoInc$NaiveDerivedTregsCT = popNoInc$CD4CT * popNoInc$NaiveDerivedTregsRatio
+popNoInc$X4TregFromThymusCT = popNoInc$CD4CT * popNoInc$ThymusDerivedTregRatio
+popNoInc$NoTregCD4CT = popNoInc$CD4CT - (popNoInc$NaiveDerivedTregsCT + popNoInc$X4TregFromThymusCT)
+
+
+# popNoInc saved into a csv below
 
 ################################################
 #                                              #
@@ -107,6 +134,8 @@ CD69df["Age"] = lapply(CD69df["Age"], as.numeric)
 # Replacing the IL-2 HET with WT
 CD69df$Genotype[CD69df$Genotype == "IL-2-HET"] = "WT"
 
+
+
 ####################
 #
 # Saving my Results
@@ -116,8 +145,6 @@ CD69df$Genotype[CD69df$Genotype == "IL-2-HET"] = "WT"
 
 write.csv(pop, '~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv')
 write.csv(CD69df, '~/my.work/PhD/HomestaticExpansionProject/ModelData/CD69DataFromGen.csv')
+write.csv(popNoInc, "~/my.work/PhD/HomestaticExpansionProject/ModelData/NaiveTregDifferentiation.csv")
 
-
-
-
-
+#Run the python script: CalculatingActivatedTCells.py, then the poCount_V2_AfterPythonScript.R  
