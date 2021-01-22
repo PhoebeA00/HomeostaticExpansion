@@ -11,22 +11,22 @@ lambda = 0.016932;
 
 
 %Change parameters that will be fitted accordingly using the p parameter
-alpha = p(1);
-Thy_max = K; %The maximum value
+mu      = p(1);
+beta    = p(2);
+c       = p(3);
 epsilon = p(4);
-a = p(5);
-c = p(6);
-b_R = p(7);
-mu = p(8);
-beta = p(9);
-g = p(10);
-b_T = p(11);
-d = p(12);
-e_T = p(13);
-e_R = p(14);
-f = p(15);
-kA = p(16);
-n = p(17);
+n       = p(5);
+d       = p(6);
+f       = p(7);
+alpha   = p(8);
+a       = p(9);
+kA      = p(10);
+e_T     = p(11);
+e_R     = p(12);
+g       = p(13);
+b_T     = p(14);
+b_R     = p(15);
+Thy_max = K; %The maximum value
 
 %Initial conditions
 N = x(1);
@@ -35,19 +35,20 @@ R = x(3);
 I = x(4);
 m = x(5);
 
-Thy = lambda * m * (1 - m/K);
+%Thy = lambda * m * (1 - (m/K));
 
 %Cell  
-dNdt = mu*(Thy/Thy_max)-beta*N*(1/(1+(R/kA)^n))- c*N - g*N;
+dNdt = mu*(m/Thy_max)-beta*N*(1/(1+(R/kA)^n))- c*N - g*N;
     
 dTdt = beta*N*(1/(1+(R/kA)^n)) + a*I*T - b_T*T;
 
-dRdt = alpha*(Thy/Thy_max) + epsilon*a*I*R + c*N - b_R*R;
+dRdt = alpha*(m/Thy_max) + epsilon*a*I*R + c*N - b_R*R;
 
 dIdt = d*T - e_T*I*T - e_R*I*R - f*I;
 
-dmdt = Thy;
-%The apostrophe returns a transposed matrix of [4x1]
+dmdt = lambda * m * (1 - (m/K));
+%dmdt = Thy;
+%The apostrophe returns a transposed matrix of [4 columns x n rows]
 dTdt = [dNdt, dTdt, dRdt, dIdt, dmdt]';
 
 

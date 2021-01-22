@@ -1,20 +1,17 @@
-%% Plotting the naive derived Tregs, parameter c, entry number 18
-
+function Res_Main(EntryNumber)
 
 % This is the main script for calculating the Residuals of all the data
 %Gets residuals for all data types
 
-close all; clear all; clc
-
 Data = readtable('../RawData/ActivatedWTSpleen.csv');
 CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
      'hours'});
- 
+
 tx = 1:432;
 
 DataUsed = [1, 2, 3]; % Naive = 1, Activ = 2, Treg = 3, hours = 4
 
-ModelData = Plot_Simulation(25); %Give the parameter set to be explored here
+[ModelData, Error] = Plot_Simulation(EntryNumber); %Give the parameter set to be explored here
 
 %Setting up the hours
 DataHours = unique(CellData.hours);
@@ -68,7 +65,7 @@ Residuals.Properties.VariableNames = {'N', 'T', 'R', 'hour'};
 disp('Ready to Plot!')
 
 
-figure(1)
+Plt = figure;
 
 %Simulation and Data
 
@@ -77,6 +74,7 @@ scatter(CellData.hours, CellData.NaiveCT)
 hold on 
 plot(tx, ModelData(:,1))
 title('Naive T Cells')
+hold off
 
 subplot(2,3,2)
 scatter(CellData.hours, CellData.ActivatedCD4CT)
@@ -110,18 +108,8 @@ hold on
 yline(0)
 title('Residuals Tregs')
 
+sgtitle({['Error = ' num2str(Error)]})
 
-figure(2)
-
-plot(tx,ModelData(:,4))
-title('IL-2')
-%% Plotting Thymus results vs data to see if everything is ok
-
-ModelThymus = ModelData(:,5); 
-ThymusData = readtable('../Data/ThymusData.csv');
-
-scatter(ThymusData.Hours, ThymusData.Weight, 'o')
-hold on
-plot(tx, ModelThymus)
-
+%saveas(Plt,sprintf('../Plots/FIG_%d.png',EntryNumber));
+end
 

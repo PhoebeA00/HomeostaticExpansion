@@ -1,41 +1,22 @@
-function ModelData = Plot_Simulation(ParameterNumber)
+function [ModelData, Error] = Plot_Simulation(ParameterNumber)
 
 tx = 1:432; %Max hours in the simulation
 ModelData = zeros(length(tx),0);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%     Choose parameters here      %%%%%%%%%%%%%%%%%
-%                                                               %
-p = GetParameters(ParameterNumber);                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%        Choose parameters here        %%%%%%
+p = GetParameters(ParameterNumber);                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%
+%-------Initial Conditions-----%
+%%%%%%%%%%%%%%%
 
-%Change parameters that will be fitted accordingly using the p parameter
-%alpha = p(1);
-%Thy = p(2);
-%Thy_max = p(3);
-%epsilon = p(4);
-%a = p(5);
-%c = p(6);
-%b_R = p(7);
-%mu = p(8);
-%beta = p(9);
-%g = p(10);
-%b_T = p(11);
-%d = p(12);
-%e_T = p(13);
-%e_R = p(14);
-%f = p(15);
-%kA = p(16);
-%n = p(17);
-
-
-%Initial Conditions
-N = p(20);
-T = p(21);
-R = p(22);
-I = p(23);
-m = 0.0023; %Average of the Thymus weight starting at day 0
+N = 10000; %Naive T cells
+T = 3000; %Activated T Cells
+R = 300; %T Regulatory Cells
+I = 0; %IL-2 Cytokine
+m = 0.0023; %Average of the Thymus weight at day 0
 
 T0 = [N,T,R,I,m];
 
@@ -57,3 +38,4 @@ for i = 1:length(tx)-1
     ModelData(i+1,4) = T0(4); %IL-2
     ModelData(i+1,5) = T0(5); %Thymus Weight
 end
+Error = p(18);

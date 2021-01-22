@@ -1,0 +1,27 @@
+% Parameter Ranges
+alpha_min = 0; %Thymus to Tregs
+alpha_max = 500000; 
+
+a_min = 0; %Self Replication rate for both Treg and T
+a_max = 0.000000029266;%Recommended by algorith from 0.00000001
+
+kA_min = 0; %Half suppression rate by Tregs
+kA_max = 1000000000;
+
+e_T_min = 0; %Consumption rate of T cells
+e_T_max = 100000;
+
+e_R_min = 0; %Consumption rate of Tregs
+e_R_max = 100000;
+
+g_min = 0; %Death rate of Naive
+g_max = 1;
+
+b_T_min = 0; %Death Rate of T cells
+b_T_max = 500000;
+
+b_R_min = 0; %Death Rate of Tregs
+b_R_max = 500000;
+
+The parameter range sets that I explore in parameter ranges 3 were not wide enough in
+b_R, b_T, alpha, e_T, and e_R

@@ -37,14 +37,24 @@ disp(['lambda: ' num2str(lambda)])
 %%
 ThymusData = readtable('../Data/ThymusData.csv');
 ModelData = SimulateThymus(pOpt);
+%%
+%Plotting variables
 
-scatter(ThymusData.Hours, ThymusData.Weight)
+TitleFontSize = 50;
+XFontSize = 50;
+YFontSize = 50;
+AxisFont = 30;
+DotSize = 200;
+LineWidth = 7;
+%Plot
+scatter(ThymusData.Hours, ThymusData.Weight, DotSize, 'filled')
 hold on
-plot(MaxTime, ModelData)
-title('Thymus weight in grams')
-ylabel('Weight in grams')
-xlabel('Time in hours')
+plot(MaxTime, ModelData, 'linewidth', LineWidth)
+title('Thymus weight in grams', 'Fontsize', TitleFontSize)
+ylabel('Weight in grams', 'Fontsize', YFontSize)
+xlabel('Time in hours', 'Fontsize', XFontSize)
 legend('Data', 'Logistical Growth')
+set(gca, 'FontSize', AxisFont)
 
 
 
