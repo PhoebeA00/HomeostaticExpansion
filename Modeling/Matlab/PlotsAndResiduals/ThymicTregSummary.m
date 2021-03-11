@@ -1,13 +1,12 @@
-close all; clear all; clc
+function ThymicTregSummary(EntryNumber)
+%close all; clear all; clc
 %Getting Data from simulation and for table
 Data = readtable('../RawData/ActivatedWTSpleen.csv');
-CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
-     'hours'});
- 
-% - Selecting the Data that I want to visualize
-EntryNumber = 2;
-%hours where our data belongs
-tx = 1:432; 
+CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'X4TregFromThymusCT', ...                  
+     'hours'}); 
+
+%EntryNumber = 1;
+tx = 1:432; %hours where our data belongs
 
 [ModelData, Error] = Plot_Simulation(EntryNumber);%Error value for plotting
 
@@ -50,6 +49,7 @@ ModelData(:,9) =beta.* ModelData(:,1).*(1./(1+(ModelData(:,3)./kA).^n)); %Activa
 ModelData(:,10) = a.*ModelData(:,4).*ModelData(:,2); %Activated T Cell Self Replication
 ModelData(:,11) = (1./(1+(ModelData(:,3)./kA).^n)); %Hill equation
 
+
 %ModelData1 = array2table(ModelData,...
 % 'VariableNames',{'NaiveCT','ActivatedCD4CT','AllTregs', 'IL2', 'ThymusMass'});
 
@@ -75,7 +75,7 @@ YFontSize = 20;
 %-------------------------------------------------------------------------------%
 % ------------------------------- Plotting -----------------------------------%
 %-------------------------------------------------------------------------------%
-PLT = figure(1);
+PLT = figure('Visible', 'off');
 %PLT = figure('visible','off');
 set(PLT,'Position',[left bottom width height]); %This sents the position of the figure itself
 
@@ -95,7 +95,7 @@ hold off
 
 %---------- T Regulatory Cells ----------%
 subplot(3,3,2) % Top left
-scatter(CellData.hours, CellData.AllTregs)
+scatter(CellData.hours, CellData.X4TregFromThymusCT)
 hold on 
 plot(tx, ModelData(:,3))
 title('T Regulatory Cells', 'Fontsize', TitleFontSize)
@@ -122,7 +122,7 @@ ylabel(ylab2, 'Fontsize', YFontSize)
 
 %---------- Other Treg growths ---------%
 subplot(3,3,5)
-%scatter(CellData.hours, CellData.AllTregs)
+%scatter(CellData.hours, CellData.X4TregFromThymusCTs)
 plot(tx, ModelData(:,6), 'DisplayName', 'From Naive')
 hold on
 plot(tx, ModelData(:,7), 'DisplayName', 'Self Replication')
@@ -146,14 +146,14 @@ legend('Location','northwest')
 hold off        
 
 
-Changing = {'alpha',     alpha,     '   cells*hr−1';...
+Changing = {'*alpha',     alpha,     '   cells*hr−1';...
                     'a',           a,            '   Molecule-1*hr−1';...
                     'kA',         kA,          '   cells';...
-                    'e_T',       e_T,         '   cells-1*hr−1';...
+                    '*e_T',       e_T,         '   cells-1*hr−1';...
                     'e_R',       e_R,         '   cells-1*hr−1';...
-                    'g',          g,             '   hr−1';...
+                    '*g',          g,             '   hr−1';...
                     'b_T',       b_T,         '   hr−1';...
-                    'b_R',      b_R,          '   hr−1';};
+                    '*b_R',      b_R,          '   hr−1';};
 
 columnname =   {'Parameters', '     Value          ', '           Units           '};
 columnformat = {'char', 'numeric', 'char'}; 
@@ -167,15 +167,15 @@ uitable('Units','normalized',...
                  'ColumnWidth', {150 200 270});
              
              
-Fixed =  {'mu',       mu,         '   cells*hr−1';...
-                'beta',      beta,      '   hr−1';...   
-                'c',           c,           '   hr−1';...
-                'epsilon',  epsilon,   '  Molecule-1*hr−1';...
-                'n',           n,           '              -        ';...
-                'd',           d,           '   Molecules*cells-1*hr−1';...
-                'f',            ff,           '   hr−1';};
+Fixed =  {'*mu',       mu,         '   cells*hr−1';...
+                '*beta',      beta,      '   hr−1';...   
+                '*c',           c,           '   hr−1';...
+                '*epsilon',  epsilon,   '  Molecule-1*hr−1';...
+                '*n',           n,           '              -        ';...
+                '*d',           d,           '   Molecules*cells-1*hr−1';...
+                '*f',            ff,           '   hr−1';};
             
-columnname =   {'Fixed Parameter', '     Value          ', '           Units           '};
+columnname =   {'Parameters', '     Value          ', '           Units           '};
 columnformat = {'char', 'numeric', 'char'}; 
 uitable('Units','normalized',...
                  'Position', [0.57 0.04 0.394 0.3],... % [ Horizontal Location, Verticle location,Right Line, Bottom Line]
@@ -185,10 +185,12 @@ uitable('Units','normalized',...
                  'RowName',[],...
                   'FontSize', 20,...
                  'ColumnWidth', {150 200 360});
-             
-PLT2 = figure(2);
+saveas(PLT,sprintf('../Plots/%d_FIG_%d.png',Error,EntryNumber));
+PLT2 = figure('Visible', 'off');
 
 plot(tx, ModelData(:,11))
 title('Hill Value', 'Fontsize', TitleFontSize)
 xlabel(xlab, 'Fontsize', XFontSize)
 ylabel('Hill Value', 'Fontsize', YFontSize)
+saveas(PLT2, sprintf('../Plots/%d_FIG_%dHill.png',Error,EntryNumber))
+end

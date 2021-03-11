@@ -5,7 +5,7 @@ CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...
      'hours'});
  
 % - Selecting the Data that I want to visualize
-EntryNumber = 2;
+EntryNumber = 12;
 %hours where our data belongs
 tx = 1:432; 
 
@@ -44,11 +44,11 @@ Thy_max = K;
 lambda = 0.016932;
 Thy=ModelData(:,5);
 %Thy = lambda.* ModelData(:,5).* (1 - (ModelData(:,5)./K));
-ModelData(:,8) = alpha * (Thy/Thy_max); %Thymic Tregs
+ModelData(:,8) = alpha * (Thy/Thy_max);
 
 ModelData(:,9) =beta.* ModelData(:,1).*(1./(1+(ModelData(:,3)./kA).^n)); %Activation of naive
 ModelData(:,10) = a.*ModelData(:,4).*ModelData(:,2); %Activated T Cell Self Replication
-ModelData(:,11) = (1./(1+(ModelData(:,3)./kA).^n)); %Hill equation
+
 
 %ModelData1 = array2table(ModelData,...
 % 'VariableNames',{'NaiveCT','ActivatedCD4CT','AllTregs', 'IL2', 'ThymusMass'});
@@ -75,7 +75,7 @@ YFontSize = 20;
 %-------------------------------------------------------------------------------%
 % ------------------------------- Plotting -----------------------------------%
 %-------------------------------------------------------------------------------%
-PLT = figure(1);
+PLT = figure();
 %PLT = figure('visible','off');
 set(PLT,'Position',[left bottom width height]); %This sents the position of the figure itself
 
@@ -185,10 +185,3 @@ uitable('Units','normalized',...
                  'RowName',[],...
                   'FontSize', 20,...
                  'ColumnWidth', {150 200 360});
-             
-PLT2 = figure(2);
-
-plot(tx, ModelData(:,11))
-title('Hill Value', 'Fontsize', TitleFontSize)
-xlabel(xlab, 'Fontsize', XFontSize)
-ylabel('Hill Value', 'Fontsize', YFontSize)

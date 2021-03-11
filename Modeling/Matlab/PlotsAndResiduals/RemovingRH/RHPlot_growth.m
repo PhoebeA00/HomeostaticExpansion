@@ -38,9 +38,9 @@ m = x(5);
 %Thy = lambda * m * (1 - (m/K));
 
 %Cell  
-dNdt = mu*(m/Thy_max)-beta*N*(1/(1+(R/kA)^n)) - c*N - g*N;
+dNdt = mu*(m/Thy_max)-beta*N - c*N - g*N;
     
-dTdt = beta*N*(1/(1+(R/kA)^n)) + a*I*T - b_T*T;
+dTdt = beta*N + a*I*T - b_T*T;
 
 dRdt = alpha*(m/Thy_max) + epsilon*I*R + c*N - b_R*R;
 

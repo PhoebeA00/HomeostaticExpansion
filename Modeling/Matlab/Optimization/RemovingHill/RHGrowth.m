@@ -1,4 +1,4 @@
-function dTdt = Growth(t, x, p, i)
+function dTdt = RHGrowth(t, x, p, i)
 %global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
 global d f n
 
@@ -62,9 +62,9 @@ lambda = 0.016932;
 %disp(['Thymus: ' num2str(Thy)])
 
 %Cell  
-dNdt = mu*(m/K)-beta*N*(1/(1+(R/kA)^n))- c*N - g*N;
+dNdt = mu*(m/K)-beta*N- c*N - g*N;
     
-dTdt = beta*N*(1/(1+(R/kA)^n)) + a*I*T - b_T*T;
+dTdt = beta*N + a*I*T - b_T*T;
 
 dRdt = alpha*(m/K) + epsilon*I*R + c*N - b_R*R;
 

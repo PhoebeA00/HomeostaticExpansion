@@ -1,22 +1,7 @@
-Minimized = read.csv("~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/Data/ParameterRanges8.csv")
-
-#Studying e_R
-small_e_R = subset(Minimized, e_R < 10)
-hist(small_e_R$e_R, breaks = 40)
-
-a = summary(Minimized$Error)
-
-#Studying of Error
-
-SmallError = subset(Minimized, Error < 1.4e+14)
-hist(SmallError$Error, breaks = 100)
-
-#Histograming
-hist(Minimized$Error, breaks = 100)
-
-
+Minimized = read.csv("~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/Data/ParameterRanges19.csv")
+High_Plus = subset(Minimized, Error >= 154000)
 ###Histograms of all
-for (col in 2:ncol(Minimized)) {
+for (col in 2:ncol(High_Plus)) {
   hist(Minimized[,col],
        main = colnames(Minimized)[col], breaks= 40)
 }
@@ -102,6 +87,21 @@ for (col in 8:ncol(Minimized)) {
   plot(HighHist, col = c2, main = colnames(Minimized)[col],
        xlab = "Parameter Values", plot= FALSE)
   plot(LowHist, col = c1, add = TRUE)
-  #hist(Minimized[,col],
-  #     main = colnames(Minimized)[col], breaks= 40)
+  hist(Minimized[,col],
+      main = colnames(Minimized)[col], breaks= 40)
+}
+
+
+LowError = subset(Minimized, Error < 22000)
+HighError = subset(Minimized, Error >= 22000 & Error < 133000)
+
+for (col in 8:ncol(Minimized)) {
+  LowHist = hist(LowError[,col], breaks = 40, plot = FALSE)
+  HighHist = hist(HighError[,col], breaks = 40, plot = FALSE)
+  
+  plot(HighHist, col = c2, main = colnames(Minimized)[col],
+       xlab = "Parameter Values", plot= FALSE)
+  plot(LowHist, col = c1, add = TRUE)
+  hist(Minimized[,col],
+       main = colnames(Minimized)[col], breaks= 40)
 }

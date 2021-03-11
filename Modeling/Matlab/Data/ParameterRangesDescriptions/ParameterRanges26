@@ -1,38 +1,6 @@
-close all; clear all; clc
-global tx N T R I pOpt p0 m
-%global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
-global n d f Objective
-
-%----------------------------------------------------------------%
-%------------------------CHECK LIST-------------------------%
-%----------------------------------------------------------------%
-
-%{
-Where my code is located:
-/home/jon/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab
-1 - Change global vectors in:                                  
-                      ModelandCellGrowth.m(Line 4),                              
-                      Growth.m(Line3)                                            
-  1a - Add parameters that have been removed.                  
-       Copy and paste the commented parameter list
-  1b - Remove parameter for this experiment
-2 - Change parameters to be optimized here
-  2a - Add parameters to p0 and set limits 
-  2b - Comment out the parameters to be explored in p0 below
-  2c - Remove % from parameters not being explored
-3 - Change parameters to be optimized in Growth.m
-4 - Depending on what you are optimizing for, choose the right
-       data sets for optimization in the GrowthObjective.m file
-5 - Change Paramter csv file to save in the right one
-    5a: There are two here
-    5b: When plotting there is one spot in GetParameters script
-
-%}
-
-
 % Parameter Ranges
-alpha_min = 33914; %Thymic derived Tregs
-alpha_max = 33914; 
+alpha_min = 10000; %Thymic derived Tregs
+alpha_max = 53981; 
 
 a_min = 0.0001; %Self Replication rate for activated T cells
 a_max = 0.2;
@@ -52,8 +20,8 @@ g_max = 0;
 b_T_min = 0.2;%Death Rate of T cells
 b_T_max = 0.5;
 
-b_R_min = 0.2927;%Death Rate of Tregs
-b_R_max = 0.2927;
+b_R_min = 0.3;%Death Rate of Tregs
+b_R_max = 0.3;
 
 epsilon_min = 0.1895;%Self Replication rate of Tregs
 epsilon_max = 0.1895;
@@ -65,7 +33,7 @@ beta_min = 0.3; %activation rate
 beta_max = 0.3;
 
 c_min = 0.0206; %Naive differentiation to Tregs
-c_max = 0.0206;
+c_max =  0.0206;
 
 %Randomizing the initial parameter choices
 alpha = alpha_min + rand(1,1) * (alpha_max - alpha_min);
@@ -125,41 +93,57 @@ m = 0.0023; %Average of the Thymus weight at day 0
 
 tx = 0:432; %Maximum amount of time - 18 days
 
-% optimize parameters
-disp('Beginning Optimization...')
-% options = optimoptions(@fmincon,'Algorithm','interior-point');
-[pOpt, error] = fmincon(@GrowthObjective,p0,A,b,Aeq,beq,lb,ub,nlcon);
-disp('...Ending Optimization')
-%Optimized Parameters
-alpha = pOpt(1);
-a = pOpt(2);
-kA = pOpt(3);
-e_T= pOpt(4);
-e_R= pOpt(5);
-g= pOpt(6);
-b_T= pOpt(7);
-b_R= pOpt(8);
-epsilon = pOpt(9);
-mu = pOpt(10);
-beta = pOpt(11);
-c = pOpt(12);
 
-%-----Change this for saving files in a different location-----%
-FileLocation = '../Data/ParameterRanges26.csv';
-%---------------------------------------------------------------------------%
-ParameterData = readtable(FileLocation);
 
-if isempty(ParameterData.EntryNumber)
-    EntryNumber = 1;
-else
-    EntryNumber = max(ParameterData.EntryNumber)+1;
-end
 
-parameters = [mu, beta, c, epsilon, n, d, f, alpha, a,... 
-    kA, e_T, e_R, g, b_T, b_R, error, EntryNumber, Objective];
 
-dlmwrite(FileLocation ,parameters,'delimiter',',','-append');
 
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        	Notes		 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fixing alpha to the thymus only data.
+
+%1 
+well this one was like perfect. Oh wait, I was supposed to set c and self replication to 0. (epsilon)
+
+
+%2
+Opening up death rate
+b_R_min = 0;%Death Rate of Tregs
+b_R_max = 0.3;
+
+and letting run for a while
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       		Concluding Remarks for 3-11			   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+fixing alpha to 33914
+and b_R to 0.2927
+
+Next entries we go back to normal
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       		Concluding Remarks for 12-23			   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I forgot to unfix epsilon and c
 
 
 

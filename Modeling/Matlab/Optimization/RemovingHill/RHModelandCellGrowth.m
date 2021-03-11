@@ -29,43 +29,45 @@ Where my code is located:
 
 %}
 
-
 % Parameter Ranges
-alpha_min = 33914; %Thymic derived Tregs
-alpha_max = 33914; 
+alpha_min = 200000; %Lower bounds when fit only to thymic derived
+alpha_max = 600000; %Upper bounds when fit only to thymic derived
 
-a_min = 0.0001; %Self Replication rate for activated T cells
-a_max = 0.2;
+a_min = 0; %Self Replication rate for activated T cells
+a_max = 1;%10000;%10000;
 
 kA_min = 0; %Half suppression rate by Tregs
-kA_max = 1000000; 
+kA_max = 0; %Maxmimum number
 
-e_T_min = 100; %Consumption rate of T cells
+e_T_min = 2.3507E-07; %Consumption rate of T cells
 e_T_max = 100; %activated T cells consume at max 1/10 of what they make
 
 e_R_min = 1.3744E-09; %Consumption rate of Tregs
 e_R_max = 2000;
 
-g_min = 0;%Death rate of Naive
-g_max = 0;
+g_min = 0;%1.2318E-21; %Death rate of Naive
+g_max = 1;
 
-b_T_min = 0.2;%Death Rate of T cells
-b_T_max = 0.5;
+b_T_min = 0;%1.7646E-10; %Death Rate of T cells
+b_T_max = 1;
 
-b_R_min = 0.2927;%Death Rate of Tregs
-b_R_max = 0.2927;
+b_R_min = 0;%1.1319E-13; %Death Rate of Tregs
+b_R_max = 1;
 
-epsilon_min = 0.1895;%Self Replication rate of Tregs
-epsilon_max = 0.1895;
+epsilon_min = 0;%Self Replication rate of Tregs
+epsilon_max = 1;
 
-mu_min =   100000; %Naive T production rate
-mu_max = 100000; 
+mu_min =   200000;%2920175; %Thymus to Naive initial fixed value
+mu_max = 5000000;
+%mu = 2920175.4181; 
 
-beta_min = 0.3; %activation rate
-beta_max = 0.3;
+beta_min = 0.3;
+beta_max = 1;
+%beta = 0.0014984; %Naive to Activated T cells
 
-c_min = 0.0206; %Naive differentiation to Tregs
-c_max = 0.0206;
+c_min = 0;%0.00056013;
+c_max =  1;
+%c = 0.00056013; % Naive to Tregs
 
 %Randomizing the initial parameter choices
 alpha = alpha_min + rand(1,1) * (alpha_max - alpha_min);
@@ -118,7 +120,7 @@ f = 1.38629; %IL-2 degradation Rate
 %-------Initial Conditions-----%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 N = 10000; %Naive T cells
-T = 0; %Activated T Cells
+T = 3000; %Activated T Cells
 R = 300; %T Regulatory Cells
 I = 0; %IL-2 Cytokine
 m = 0.0023; %Average of the Thymus weight at day 0
@@ -128,7 +130,7 @@ tx = 0:432; %Maximum amount of time - 18 days
 % optimize parameters
 disp('Beginning Optimization...')
 % options = optimoptions(@fmincon,'Algorithm','interior-point');
-[pOpt, error] = fmincon(@GrowthObjective,p0,A,b,Aeq,beq,lb,ub,nlcon);
+[pOpt, error] = fmincon(@RHGrowthObjective,p0,A,b,Aeq,beq,lb,ub,nlcon);
 disp('...Ending Optimization')
 %Optimized Parameters
 alpha = pOpt(1);
@@ -145,7 +147,7 @@ beta = pOpt(11);
 c = pOpt(12);
 
 %-----Change this for saving files in a different location-----%
-FileLocation = '../Data/ParameterRanges26.csv';
+FileLocation = '../../Data/ParameterRanges18.csv';
 %---------------------------------------------------------------------------%
 ParameterData = readtable(FileLocation);
 

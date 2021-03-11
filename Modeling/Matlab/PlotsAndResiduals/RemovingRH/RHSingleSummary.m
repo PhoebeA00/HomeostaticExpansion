@@ -1,17 +1,17 @@
 close all; clear all; clc
 %Getting Data from simulation and for table
-Data = readtable('../RawData/ActivatedWTSpleen.csv');
+Data = readtable('../../RawData/ActivatedWTSpleen.csv');
 CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
      'hours'});
  
 % - Selecting the Data that I want to visualize
-EntryNumber = 2;
+EntryNumber = 3;
 %hours where our data belongs
 tx = 1:432; 
 
-[ModelData, Error] = Plot_Simulation(EntryNumber);%Error value for plotting
+[ModelData, Error] = RHPlot_Simulation(EntryNumber);%Error value for plotting
 
-p = GetParameters(EntryNumber);
+p = RHGetParameters(EntryNumber);
 
 %Parameter Values
 mu      = p(1);
@@ -38,20 +38,12 @@ ModelData(:,6) = c * ModelData(:,1); %Tregs from Naive Differentiation: c*Naive
 ModelData(:,7) = epsilon * a .*ModelData(:,4) .*ModelData(:,3); %Treg Self Replication: epsilon*a*I*Tregs
 %ModelData(:,8) = ModelData(:,3) - (ModelData(:,6) + ModelData(:,7)); %Tregs from Thymus
 
-%Logistical growth equation for the Thymus
-K = 0.074896;
-Thy_max = K;
-lambda = 0.016932;
+Thy_max = 0.074896;
 Thy=ModelData(:,5);
-%Thy = lambda.* ModelData(:,5).* (1 - (ModelData(:,5)./K));
-ModelData(:,8) = alpha * (Thy/Thy_max); %Thymic Tregs
+ModelData(:,8) = alpha * (Thy/Thy_max); %Thymic Derived
 
-ModelData(:,9) =beta.* ModelData(:,1).*(1./(1+(ModelData(:,3)./kA).^n)); %Activation of naive
+ModelData(:,9) =beta.* ModelData(:,1); %Activation of naive
 ModelData(:,10) = a.*ModelData(:,4).*ModelData(:,2); %Activated T Cell Self Replication
-ModelData(:,11) = (1./(1+(ModelData(:,3)./kA).^n)); %Hill equation
-
-%ModelData1 = array2table(ModelData,...
-% 'VariableNames',{'NaiveCT','ActivatedCD4CT','AllTregs', 'IL2', 'ThymusMass'});
 
 
 %-------------------------------------------------------------------------------%
@@ -185,10 +177,3 @@ uitable('Units','normalized',...
                  'RowName',[],...
                   'FontSize', 20,...
                  'ColumnWidth', {150 200 360});
-             
-PLT2 = figure(2);
-
-plot(tx, ModelData(:,11))
-title('Hill Value', 'Fontsize', TitleFontSize)
-xlabel(xlab, 'Fontsize', XFontSize)
-ylabel('Hill Value', 'Fontsize', YFontSize)

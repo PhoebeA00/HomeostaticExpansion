@@ -1,11 +1,11 @@
-function [ModelData, Error] = Plot_Simulation(ParameterNumber)
+function [ModelData, Error] = RHPlot_Simulation(ParameterNumber)
 
 tx = 1:432; %Max hours in the simulation
 ModelData = zeros(length(tx),0);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%$$%$        Choose parameters here        %%%%%%
-p = GetParameters(ParameterNumber);                   %
+%%        Choose parameters here        %%%%%%
+p = RHGetParameters(ParameterNumber);                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%
@@ -30,7 +30,7 @@ ModelData(1,5) = T0(5);
 disp('Simulating...')
 for i = 1:length(tx)-1
     ts = [tx(i),tx(i+1)];%Time step by hour
-    sol = ode15s(@(t,x)Plot_growth(t,x,p,i),ts,T0);
+    sol = ode15s(@(t,x)RHPlot_growth(t,x,p,i),ts,T0);
     T0 = [sol.y(1,end),sol.y(2,end),sol.y(3,end),sol.y(4,end),sol.y(5,end)];
     ModelData(i+1,1) = T0(1); %Naive
     ModelData(i+1,2) = T0(2); %Activated T Cells

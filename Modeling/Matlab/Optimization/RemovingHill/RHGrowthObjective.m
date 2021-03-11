@@ -1,9 +1,9 @@
-function obj= GrowthObjective(p)
+function obj= RHGrowthObjective(p)
 global Objective
 %load data
-Data = readtable('../RawData/ActivatedWTSpleen.csv');
+Data = readtable('../../RawData/ActivatedWTSpleen.csv');
 %CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'X4TregFromThymusCT', ...                  
-%     'hours'}); 
+   %  'hours'}); 
 CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...                  
      'hours'}); 
 
@@ -19,7 +19,7 @@ DataUsed = [1, 2, 3];
 %The data location is equivalent in the ModelData df            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ModelData = SimulateGrowth(p);
+ModelData = RHSimulateGrowth(p);
 
 %Setting up the hours
 DataHours = unique(CellData.hours);

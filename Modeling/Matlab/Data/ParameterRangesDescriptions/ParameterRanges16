@@ -1,0 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        	Notes		 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+c set to 0 - naive to treg differentiation
+epsilon set to 0 - Treg self replication rate
+
+Something is growing incredibly high, It might be the self replication of activated T cells, I'm going to set a to 0 to see if that fixes it. 
+
+epsilon can make treg population explode, but it's not just because of an epsilon value.
+
+alpha is being constrained between 200000 to 600000. These ranges were found when I fitted alpha only to thymic derived Tregs. I am letting the model predict what the possibilities are for self replicaiton and differentiation of Tregs
+
+252

@@ -1,4 +1,4 @@
-function Parameters = GetParameters(EntryNmbr)
+function Parameters = RHGetParameters(EntryNmbr)
 %Gets parameter from the Parameters.csv file that is in the same folder as
 %this function
 %Pulls only the row given in EntryNmber. Further manipulation will occur in
@@ -9,7 +9,7 @@ function Parameters = GetParameters(EntryNmbr)
 % 12_d 13_e_T 14_e_R 15_f 16_kA 17_n 18_EntryNumber 19_Notes 20_Naive
 % 21_Activated 22_Treg 23_IL2 24_PreviousPset
 
-ParameterData = readtable('../Data/ParameterRanges26.csv');
+ParameterData = readtable('../../Data/ParameterRanges18.csv');
 PrmtIndex = ParameterData.EntryNumber == EntryNmbr;
 Parameters = ParameterData{PrmtIndex,:}; % {} - Returns an array somehow
 

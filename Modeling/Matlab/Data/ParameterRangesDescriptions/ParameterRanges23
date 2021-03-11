@@ -1,0 +1,151 @@
+% Parameter Ranges
+alpha_min = 200000; %Lower bounds when fit only to thymic derived
+alpha_max = 300000; %Upper bounds when fit only to thymic derived
+
+a_min = 0; %Self Replication rate for activated T cells
+a_max = 0.2;%10000;%10000;
+
+kA_min = 0; %Half suppression rate by Tregs
+kA_max = 1000000; %Maxmimum number
+
+e_T_min = 2.3507E-07; %Consumption rate of T cells
+e_T_max = 100; %activated T cells consume at max 1/10 of what they make
+
+e_R_min = 1.3744E-09; %Consumption rate of Tregs
+e_R_max = 2000;
+
+g_min = 0.2;%1.2318E-21; %Death rate of Naive
+g_max = 0.4;
+
+b_T_min = 0.2;%1.7646E-10; %Death Rate of T cells
+b_T_max = 0.5;
+
+b_R_min = 0.6;%1.1319E-13; %Death Rate of Tregs
+b_R_max = 1;
+
+epsilon_min = 0;%Self Replication rate of Tregs
+epsilon_max = 0.6;
+
+mu_min =   300000;%2920175; %Thymus to Naive initial fixed value
+mu_max = 600000;
+%mu = 2920175.4181; 
+
+beta_min = 0.3;
+beta_max = 0.3;
+%beta = 0.0014984; %Naive to Activated T cells
+
+c_min = 0;%0.00056013;
+c_max =  0.185;
+%c = 0.00056013; % Naive to Tregs
+
+%Randomizing the initial parameter choices
+alpha = alpha_min + rand(1,1) * (alpha_max - alpha_min);
+a =   a_min + rand(1,1) * (a_max - a_min);
+kA =  kA_min + rand(1,1) * (kA_max - kA_min);
+g = g_min + rand(1,1) * (g_max - g_min);
+b_T = b_T_min + rand(1,1) * (b_T_max - b_T_min);
+b_R = b_R_min + rand(1,1) * (b_T_max - b_T_min);
+epsilon = epsilon_min + rand(1,1) * (epsilon_max - epsilon_min);
+mu = mu_min + rand(1,1) * (mu_max - mu_min);
+beta = beta_min + rand(1,1) * (beta_max - beta_min);
+c = c_min + rand(1,1) * (c_min-c_max);
+%Making sure that the consumption of Tregs is greater than that of
+%activated T cell
+e_T = e_T_min + rand(1,1) * (e_T_max - e_T_min);
+e_R = e_R_min + rand(1,1) * (e_R_max - e_R_min);
+
+while e_T > e_R
+    e_T = e_T_min + rand(1,1) * (e_T_max - e_T_min);
+    e_R = e_R_min + rand(1,1) * (e_R_max - e_R_min);
+end
+
+%------fmincon function arguments definitions-------
+p0 = [alpha a kA e_T e_R g b_T b_R epsilon mu beta c];
+lb = [alpha_min, a_min, kA_min, e_T_min, e_R_min, g_min, ...
+    b_T_min, b_R_min, epsilon_min, mu_min, beta_min, c_min]; %[] lower bound
+ub = [alpha_max, a_max, kA_max, e_T_max, e_R_max, g_max, ...
+    b_T_max, b_R_max, epsilon_max, mu_max, beta_max, c_max]; %[] upper bound
+
+% no linear constraints
+A = [0 0 0 1 -1 0 0 0 0 0 0 0];
+b = 0;
+Aeq = [];
+beq = [];
+nlcon = [];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-------Fixed Parameters-------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%mu = 2920175.4181; %Thymus to Naive
+%beta = 0.0014984; %Naive to Activated T cells
+%c = 0.00056013; % Naive to Tregs
+%epsilon = 0.6; %Relative replication of Tregs to Activated T
+n = 1; %Hill coefficient
+d = 1000; %IL-2 production Rate
+f = 1.38629; %IL-2 degradation Rate
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-------Initial Conditions-----%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+N = 10000; %Naive T cells
+T = 0; %Activated T Cells
+R = 300; %T Regulatory Cells
+I = 0; %IL-2 Cytokine
+m = 0.0023; %Average of the Thymus weight at day 0
+
+tx = 0:432; %Maximum amount of time - 18 days
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        	Notes		 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+So it looks like the death rates that I set up for before aren't working anymore, because all to the limitations from before lowered the explosive growth and the system was trying to make it not do that by having a freakishly high death rate. So the system was over compensating before for the high growth rates.
+
+
+Now what I am going to find out now is that system actually just really needs a low death rate? I fucking hope so man. That'll make such a good story. 
+
+Death rate is too low at 0, makes system explode, will raise g and b_T minimum to 0.1
+
+0.1 prooved very quickly that that was way too low, lots of failure as soon as the simluation started. Rose it to 0.2
+
+Seems good so far
+
+Mentioning that there was something funky going on at c = 0.18. Can't explain it, should I care?
+
+Increasing the min of mu to 300k and maximum to 600k and reducing the maximum of g to 0.4
+
+I should only plot 10 and above after this.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       Concluding Remarks	 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Thymic production is too high, it doesn't givve enough space for differentiation and self replication
+
+Alpha should be lowered
+
+fixing c to 0.1
+Lowering alpha minimum to 100k and maximum to 200k
+fix g to 0.2
+increase mu minimum to 500k
+
