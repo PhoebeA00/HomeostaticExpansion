@@ -5,7 +5,7 @@ CellData = Data(:,{'NaiveCT', 'ActivatedCD4CT', 'AllTregs', ...
      'hours'});
  
 % - Selecting the Data that I want to visualize
-EntryNumber = 2;
+EntryNumber = 1;
 %hours where our data belongs
 tx = 1:432; 
 
@@ -29,29 +29,30 @@ e_R     = p(12);
 g       = p(13);
 b_T     = p(14);
 b_R     = p(15);
+kB      = p(16);
 
 
 
 %Simulation results are in the form ModelData = [dNdt, dTdt, dRdt, dIdt, dmdt]';
 
-ModelData(:,6) = c * ModelData(:,1); %Tregs from Naive Differentiation: c*Naive
-ModelData(:,7) = epsilon * a .*ModelData(:,4) .*ModelData(:,3); %Treg Self Replication: epsilon*a*I*Tregs
-%ModelData(:,8) = ModelData(:,3) - (ModelData(:,6) + ModelData(:,7)); %Tregs from Thymus
-
+%Tregs from Naive Differentiation: c*Naive
+ModelData(:,6) = c.* ModelData(:,1); 
+%Treg Self Replication: epsilon*Tregs
+ModelData(:,7) = epsilon.*ModelData(:,3); 
 %Logistical growth equation for the Thymus
 K = 0.074896;
 Thy_max = K;
-lambda = 0.016932;
 Thy=ModelData(:,5);
-%Thy = lambda.* ModelData(:,5).* (1 - (ModelData(:,5)./K));
-ModelData(:,8) = alpha * (Thy/Thy_max); %Thymic Tregs
-
-ModelData(:,9) =beta.* ModelData(:,1).*(1./(1+(ModelData(:,3)./kA).^n)); %Activation of naive
-ModelData(:,10) = a.*ModelData(:,4).*ModelData(:,2); %Activated T Cell Self Replication
-ModelData(:,11) = (1./(1+(ModelData(:,3)./kA).^n)); %Hill equation
-
-%ModelData1 = array2table(ModelData,...
-% 'VariableNames',{'NaiveCT','ActivatedCD4CT','AllTregs', 'IL2', 'ThymusMass'});
+%Thymic Tregs
+ModelData(:,8) = alpha.*(Thy/Thy_max); 
+%Activation of naive
+ModelData(:,9) =beta.* ModelData(:,1).*(1./(1+(ModelData(:,3)./kA).^n)); 
+%Activated T Cell Self Replication
+ModelData(:,10) = a.*ModelData(:,2); 
+%Hill suppression naive
+ModelData(:,11) = (1./(1+(ModelData(:,3)./kA).^n));
+%Hill suppression Treg death rate
+ModelData(:,12) = (1./(1+(ModelData(:,4)./kB).^n));
 
 
 %-------------------------------------------------------------------------------%
@@ -91,6 +92,7 @@ plot(tx, ModelData(:,1))
 title('Naive T Cells', 'Fontsize', TitleFontSize)
 xlabel(xlab, 'Fontsize', XFontSize)
 ylabel(ylab, 'Fontsize', YFontSize)
+ylim([0, 8000000])
 hold off
 
 %---------- T Regulatory Cells ----------%
@@ -101,6 +103,7 @@ plot(tx, ModelData(:,3))
 title('T Regulatory Cells', 'Fontsize', TitleFontSize)
 xlabel(xlab, 'Fontsize', XFontSize)
 ylabel(ylab, 'Fontsize', YFontSize)
+ylim([0, 1500000])
 hold off          
 
 %---------- Activated T Cells ------------%
@@ -111,6 +114,7 @@ plot(tx, ModelData(:,2))
 title('Activated T Cells', 'Fontsize', TitleFontSize)
 xlabel(xlab, 'Fontsize', XFontSize)
 ylabel(ylab, 'Fontsize', YFontSize)
+ylim([0, 1500000])
 hold off
 
 %----------- IL-2 Cytokine ----------------%
@@ -146,14 +150,15 @@ legend('Location','northwest')
 hold off        
 
 
-Changing = {'alpha',     alpha,     '   cells*hr−1';...
-                    'a',           a,            '   Molecule-1*hr−1';...
-                    'kA',         kA,          '   cells';...
-                    'e_T',       e_T,         '   cells-1*hr−1';...
-                    'e_R',       e_R,         '   cells-1*hr−1';...
-                    'g',          g,             '   hr−1';...
-                    'b_T',       b_T,         '   hr−1';...
-                    'b_R',      b_R,          '   hr−1';};
+Changing = {'*alpha',     alpha,     '   cells*hr−1';...
+                    'a',           a,             '   hr−1';...
+                    'kA',         kA,           '   cells';...
+                    '*e_T',       e_T,         '   cells-1*hr−1';...
+                    'e_R',       e_R,          '   cells-1*hr−1';...
+                    '*g',          g,             '   hr−1';...
+                    'b_T',       b_T,           '   hr−1';...
+                    '*b_R',      b_R,          '   hr−1';};
+
 
 columnname =   {'Parameters', '     Value          ', '           Units           '};
 columnformat = {'char', 'numeric', 'char'}; 
@@ -167,13 +172,14 @@ uitable('Units','normalized',...
                  'ColumnWidth', {150 200 270});
              
              
-Fixed =  {'mu',       mu,         '   cells*hr−1';...
-                'beta',      beta,      '   hr−1';...   
-                'c',           c,           '   hr−1';...
-                'epsilon',  epsilon,   '  Molecule-1*hr−1';...
-                'n',           n,           '              -        ';...
-                'd',           d,           '   Molecules*cells-1*hr−1';...
-                'f',            ff,           '   hr−1';};
+Fixed =  {'*mu',       mu,         '   cells*hr−1';...
+                '*beta',      beta,      '   hr−1';...   
+                '*c',           c,           '   hr−1';...
+                'epsilon',  epsilon,   '  hr−1';...
+                '*n',           n,           '              -        ';...
+                '*d',           d,           '   Molecules*cells-1*hr−1';...
+                '*f',            ff,           '   hr−1';...
+                'kB'          kB           '   cells'};
             
 columnname =   {'Fixed Parameter', '     Value          ', '           Units           '};
 columnformat = {'char', 'numeric', 'char'}; 
@@ -188,7 +194,14 @@ uitable('Units','normalized',...
              
 PLT2 = figure(2);
 
+subplot(2,1,1)
 plot(tx, ModelData(:,11))
 title('Hill Value', 'Fontsize', TitleFontSize)
 xlabel(xlab, 'Fontsize', XFontSize)
 ylabel('Hill Value', 'Fontsize', YFontSize)
+
+subplot(2,1,2)
+plot(tx, ModelData(:,12))
+title('Treg Death Suppression', 'Fontsize', TitleFontSize)
+xlabel(xlab, 'Fontsize', TitleFontSize)
+ylabel('Death Rate Suppression', 'Fontsize', YFontSize)

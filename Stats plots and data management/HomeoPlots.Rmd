@@ -479,6 +479,127 @@ ggplot(popNoIncS, aes(x=Age, y=X4TregFromThymus, colour=Genotype, group=Genotype
   ylim(0, 0.175)
 
 ```
+#Plotting all the Tregs
+```{r}
+popActiv = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedWTSpleen.csv')
+colnames(popActiv)
+```
+#Testing geom line and error bars
+```{r}
+
+#+++++++++++++++++++++++++
+# Function to calculate the mean and the standard deviation
+  # for each group
+#+++++++++++++++++++++++++
+# data : a data frame
+# varname : the name of a column containing the variable
+  #to be summariezed
+# groupnames : vector of column names to be used as
+  # grouping variables
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+popTregs = subset(popActiv, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "X4TregFromThymusCT"))
+#Prepare data fro ggplot
+longpopTregs = gather(popTregs, variable, value, -Age)
+
+df2 <- data_summary(longpopTregs, varname="value", 
+                    groupnames=c("Age", "variable"))
+p<- ggplot(df2, aes(x=Age, y=value, group=variable, color=variable)) + 
+  geom_line() +
+  geom_point() +
+  geom_errorbar(aes(ymin=value-sd, ymax=value+sd), width=.2,
+                 position=position_dodge(0.05))
+
+print(p)
+View(longpopTregs)
+install.packages("tidyr")
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+# Create some data 
+test4 <- data.frame(Sex = rep(c('M', 'F'), 50),
+                    bodytemp = rnorm(100),
+                    length = rnorm(100), 
+                    mass = rnorm(100))
+
+View(test4)
+# Gather the data to 'long' format so the bodytemp, length and mass are all in one column
+longdata <- gather(test4, variable, value, -Sex)
+View(longdata)
+head(longdata)
+
+# Create the summary statistics seperately for sex and variable (i.e. bodytemp, length and mass)
+summary <- longdata %>%
+             group_by(Sex, variable) %>%
+             summarise(mean = mean(value), se = sd(value) / length(value))
+
+# Plot
+ggplot(summary, aes(x = variable, y = mean, fill = Sex)) + 
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se),                            
+                  width = 0.2,
+                  position = position_dodge(0.9))
+```
+
+```{r}
+popTregs2 = subset(popActiv, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "X4TregFromThymusCT", "X4TregCT"))
+popTregs2$X4TregProlCT = popTregs2$X4TregProlCT * 10**6
+popTregs2$X4TregCT = popTregs2$X4TregCT * 10**6
+
+#Prepare data fro ggplot
+
+longpopTregs2 = gather(popTregs2, variable, value, -Age)
+ggplot(longpopTregs2, aes(x = Age, y = value, color = variable)) + 
+  geom_point(position = position_dodge(1), size = 2)+
+  stat_summary(aes(group=variable, color = variable), fun.y=mean, geom="line")+
+  labs(titles = "Different Treg sources", x = "Age in Days", y = "Treg counts")+
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
+                 legend.key = element_rect(fill = "white", colour = "black"),
+                 legend.background = (element_rect(colour= "black", fill = "white")),
+        axis.title.x = element_text(face="bold", colour="black", size=20),
+        axis.title.y = element_text(face = "bold", colour = "black", size = 20),
+        plot.title = element_text(lineheight=.8, face="bold", size = 20),
+        axis.ticks.length=unit(.25, "cm"),
+        text = element_text(size=20))
+
+```
+
+
+```{r}
+popa = subset(pop, Age < 40)
+ggplot(popa, aes(x = Age, y = X4TregProlCT, color = Genotype)) + geom_point()+
+  geom_point(position = position_dodge(1), size = 4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

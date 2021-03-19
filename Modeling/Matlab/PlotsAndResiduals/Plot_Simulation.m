@@ -38,4 +38,4 @@ for i = 1:length(tx)-1
     ModelData(i+1,4) = T0(4); %IL-2
     ModelData(i+1,5) = T0(5); %Thymus Weight
 end
-Error = p(18);
+Error = p(17);

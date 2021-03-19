@@ -79,6 +79,8 @@ popNoInc <- pop[!(pop$intage == 18 & pop$expDate=="2/25/2018" | pop$expDate=="12
 popNoInc = popNoInc[!(popNoInc$FileID == "JA022518WK8M1WTS"),]
 
 #Grouping and then subtracting Thymus treg freq from Spleen
+
+#The numbers don't work out too well with this format.
 popNoInc = popNoInc %>%
   group_by(Age, Genotype, expDate) %>% #expDate is to subtract only by the thymus from the same experiment
   mutate(NaiveDerivedTregsRatio = X4TregRatio - X4TregRatio[Organ == 'Thymus'])

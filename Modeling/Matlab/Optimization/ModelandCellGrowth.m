@@ -1,7 +1,7 @@
 close all; clear all; clc
 global tx N T R I pOpt p0 m
 %global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
-global n d f Objective
+global n d f
 
 %----------------------------------------------------------------%
 %------------------------CHECK LIST-------------------------%
@@ -37,6 +37,9 @@ alpha_max = 33914;
 a_min = 0.0001; %Self Replication rate for activated T cells
 a_max = 0.2;
 
+epsilon_min = 0;%Self Replication rate of Tregs
+epsilon_max = 0.1895;
+
 kA_min = 0; %Half suppression rate by Tregs
 kA_max = 1000000; 
 
@@ -55,9 +58,6 @@ b_T_max = 0.5;
 b_R_min = 0.2927;%Death Rate of Tregs
 b_R_max = 0.2927;
 
-epsilon_min = 0.1895;%Self Replication rate of Tregs
-epsilon_max = 0.1895;
-
 mu_min =   100000; %Naive T production rate
 mu_max = 100000; 
 
@@ -66,6 +66,12 @@ beta_max = 0.3;
 
 c_min = 0.0206; %Naive differentiation to Tregs
 c_max = 0.0206;
+
+%j_min = 0; %Rate of desctruction of activated T cells
+%j_max = 100; 
+
+kB_min = 0; %half suppression rate of Treg death rate
+kB_max = 100000;
 
 %Randomizing the initial parameter choices
 alpha = alpha_min + rand(1,1) * (alpha_max - alpha_min);
@@ -77,7 +83,8 @@ b_R = b_R_min + rand(1,1) * (b_T_max - b_T_min);
 epsilon = epsilon_min + rand(1,1) * (epsilon_max - epsilon_min);
 mu = mu_min + rand(1,1) * (mu_max - mu_min);
 beta = beta_min + rand(1,1) * (beta_max - beta_min);
-c = c_min + rand(1,1) * (c_min-c_max);
+c = c_min + rand(1,1) * (c_max-c_min);
+kB = kB_min + rand(1,1)*(kB_max-kB_min);
 %Making sure that the consumption of Tregs is greater than that of
 %activated T cell
 e_T = e_T_min + rand(1,1) * (e_T_max - e_T_min);
@@ -89,14 +96,14 @@ while e_T > e_R
 end
 
 %------fmincon function arguments definitions-------
-p0 = [alpha a kA e_T e_R g b_T b_R epsilon mu beta c];
+p0 = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB];
 lb = [alpha_min, a_min, kA_min, e_T_min, e_R_min, g_min, ...
-    b_T_min, b_R_min, epsilon_min, mu_min, beta_min, c_min]; %[] lower bound
+    b_T_min, b_R_min, epsilon_min, mu_min, beta_min, c_min, kB_min]; %[] lower bound
 ub = [alpha_max, a_max, kA_max, e_T_max, e_R_max, g_max, ...
-    b_T_max, b_R_max, epsilon_max, mu_max, beta_max, c_max]; %[] upper bound
+    b_T_max, b_R_max, epsilon_max, mu_max, beta_max, c_max, kB_max]; %[] upper bound
 
 % no linear constraints
-A = [0 0 0 1 -1 0 0 0 0 0 0 0];
+A = [0 0 0 1 -1 0 0 0 0 0 0 0 0];
 b = 0;
 Aeq = [];
 beq = [];
@@ -106,10 +113,6 @@ nlcon = [];
 %-------Fixed Parameters-------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%mu = 2920175.4181; %Thymus to Naive
-%beta = 0.0014984; %Naive to Activated T cells
-%c = 0.00056013; % Naive to Tregs
-%epsilon = 0.6; %Relative replication of Tregs to Activated T
 n = 1; %Hill coefficient
 d = 1000; %IL-2 production Rate
 f = 1.38629; %IL-2 degradation Rate
@@ -143,9 +146,10 @@ epsilon = pOpt(9);
 mu = pOpt(10);
 beta = pOpt(11);
 c = pOpt(12);
+kB = pOpt(13);
 
 %-----Change this for saving files in a different location-----%
-FileLocation = '../Data/ParameterRanges26.csv';
+FileLocation = '../Data/ParameterRanges27.csv';
 %---------------------------------------------------------------------------%
 ParameterData = readtable(FileLocation);
 
@@ -156,7 +160,7 @@ else
 end
 
 parameters = [mu, beta, c, epsilon, n, d, f, alpha, a,... 
-    kA, e_T, e_R, g, b_T, b_R, error, EntryNumber, Objective];
+    kA, e_T, e_R, g, b_T, b_R, kB, error, EntryNumber];
 
 dlmwrite(FileLocation ,parameters,'delimiter',',','-append');
 
