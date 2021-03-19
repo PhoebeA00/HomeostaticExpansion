@@ -51,7 +51,8 @@ ActivationData$hours = ActivationData$intage * 24
 ActivationData$hours[ActivationData$hours == 0] <- 1 #the 0 won't work with my matlab code
 
 #Removing WT and Thymus for the fitting process
-ActivatedWTSpleen = subset(ActivationData, Genotype == 'KO' & Organ == 'Spleen')
+ActivatedWTSpleen = subset(ActivationData, Genotype == 'WT' & Organ == 'Spleen')
 ActivaedKOSpleen = subset(ActivationData, Genotype == 'KO' & Organ == 'Spleen')
 #SavingData for modeling
 write.csv(ActivatedWTSpleen, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedWTSpleen.csv')
+write.csv(ActivaedKOSpleen, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedKOSpleen.csv')
