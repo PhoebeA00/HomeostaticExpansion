@@ -1,5 +1,4 @@
 #This script 
-library(ggplot2)
 require(plyr)
 #kristen hogquist
 #Ellenbnn robread.csv2()ey
@@ -58,7 +57,7 @@ pop$BprolCT = pop$BProlRatio * pop$Bct
 pop$X4TregProlCT = pop$X4TregProlRatio * pop$X4TregCT
 pop$X8TregProlCT = pop$X8TregProlRatio * pop$X8TregCT
 
-
+# write.csv(pop, '~/my.work/PhD/HomestaticExpansionProject/deleteme/1stcalculationsPractice2.csv')
 ####################################################
 # Calculating the Tregs derived from Naive T cells #
 ####################################################
