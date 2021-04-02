@@ -101,7 +101,7 @@ scatter(CellData.hours, CellData.AllTregs)
 hold on 
 plot(tx, ModelData(:,3))
 title('T Regulatory Cells', 'Fontsize', TitleFontSize)
-xlabel(xlab, 'Fontsize', XFontSize)
+xlabel(xlab, 'FModelData(:,1)ontsize', XFontSize)
 ylabel(ylab, 'Fontsize', YFontSize)
 ylim([0, 1500000])
 hold off          

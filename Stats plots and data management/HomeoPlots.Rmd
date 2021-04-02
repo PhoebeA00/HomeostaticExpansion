@@ -206,6 +206,8 @@ ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/WithDay56/Treg
 ```
 # Treg Plots Young
 ```{r}
+library(ggplot2)
+library(scales)
 pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
 #removing an outlier, Day 0, and Day 56
 TregData = subset(pop, X4TregCT < 1 & intage > 0 & intage < 50)
@@ -225,7 +227,7 @@ ggplot(TregData, aes(intage, X4TregCT, shape = Genotype)) +
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
   stat_summary(aes(group=Genotype, color = Genotype), fun.y=mean, geom="line")
-ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/Young/Treg_Count.png",
+ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/Young/Treg_Count.pdf",
        width = 5.5,
        height = 4)
 
@@ -256,6 +258,8 @@ ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/Young/Treg_Pct
 ```
 #Activated T Cell Plots
 ```{r}
+library(ggplot2)
+library(scales)
 ActivationData = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
 ActivationData$ActivatedCD4CT =ActivationData$ActivatedCD4CT * 10**6
 ggplot(ActivationData, aes(intage, ActivatedCD4CT, shape = Genotype)) + 
@@ -274,7 +278,7 @@ ggplot(ActivationData, aes(intage, ActivatedCD4CT, shape = Genotype)) +
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
   stat_summary(aes(group=Genotype, color = Genotype), fun.y=mean, geom="line")
-ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/Young/ActivatedTCells.png",
+ggsave("~/my.work/PhD/HomestaticExpansionProject/Plots/HomeoPlots/Young/ActivatedTCells.pdf",
        width = 5.5,
        height = 4)
 ```
@@ -479,11 +483,7 @@ ggplot(popNoIncS, aes(x=Age, y=X4TregFromThymus, colour=Genotype, group=Genotype
   ylim(0, 0.175)
 
 ```
-#Plotting all the Tregs
-```{r}
-popActiv = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedWTSpleen.csv')
-colnames(popActiv)
-```
+
 #Testing geom line and error bars
 ```{r}
 
@@ -555,9 +555,8 @@ ggplot(summary, aes(x = variable, y = mean, fill = Sex)) +
 library(tidyr)
 library(ggplot2)
 popActiv = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedWTSpleen.csv')
-popTregs2 = subset(popActiv, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "X4TregFromThymusCT", "AllTregs"))
+popTregs2 = subset(popActiv, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "ThymicDerivedTregsCT", "X4TregCT"))
 popTregs2$X4TregProlCT = popTregs2$X4TregProlCT * 10**6
-
 
 #Prepare data fro ggplot
 
@@ -574,11 +573,11 @@ ggplot(longpopTregs2, aes(x = Age, y = value, color = variable)) +
         plot.title = element_text(lineheight=.8, face="bold", size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  ylim(0, 1200000)
+  ylim(0, 1100000)
 
 
 popActivKO = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedKOSpleen.csv')
-popTregsKO = subset(popActivKO, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "X4TregFromThymusCT", "AllTregs"))
+popTregsKO = subset(popActivKO, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "ThymicDerivedTregsCT", "X4TregCT"))
 popTregsKO$X4TregProlCT = popTregsKO$X4TregProlCT * 10**6
 
 #Prepare data fro ggplot
@@ -596,17 +595,15 @@ ggplot(longpopTregsKO, aes(x = Age, y = value, color = variable)) +
         plot.title = element_text(lineheight=.8, face="bold", size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  ylim(0, 1200000)
+  ylim(0, 1100000)
+# 
+# plot(popTregs2$ThymicDerivedTregsCT)
+# plot(popTregsKO$ThymicDerivedTregsCT)
+# plot(popTregs2$NaiveDerivedTregsCT)
+# plot(popTregsKO$NaiveDerivedTregsCT)
+# summary(popTregsKO$NaiveDerivedTregsCT)
+plot(ActivatedWTSpleen$Thy)
 ```
-
-
-```{r}
-popa = subset(pop, Age < 40)
-ggplot(popa, aes(x = Age, y = X4TregProlCT, color = Genotype)) + geom_point()+
-  geom_point(position = position_dodge(1), size = 4)
-```
-
-
 
 
 

@@ -7,7 +7,7 @@ a       = p(2);
 kA      = p(3);
 e_T     = p(4);
 e_R     = p(5);
-g       = p(6);
+g        = p(6);
 b_T     = p(7);
 b_R     = p(8);
 epsilon = p(9);
@@ -36,7 +36,7 @@ lambda = 0.016932;
 
 %Cell  
 dNdt = mu*(m/K)-beta*N*(1/(1+(R/kA)^n)) - c*N - g*N;
-    
+
 dTdt = beta*N*(1/(1+(R/kA)^n)) + a*T - b_T*T;
 
 dRdt = alpha*(m/K) + epsilon*R + c*N - b_R*R*(1/(1+(I/kB)^n));

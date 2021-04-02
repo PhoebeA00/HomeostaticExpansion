@@ -7,22 +7,11 @@ require(plyr)
 #pc = read.csv('/ModelData/Version8_Batchprocsesing_0-9.csv', header = T)
 pop = read.csv('~/my.work/PhD/HomestaticExpansionProject/ModelData/Version8_Batchprocsesing.csv', 
                header = T, blank.lines.skip = TRUE)
-####For my laptop#####
-#setwd('/media/jon/Seagate Expansion Drive/ModelData/PlotsAll/')
-##Remove extra data
-#pop=pop[1:125,]
 
-####For the lab computer#####
-#setwd('/ModelData/PlotsAll/')
-#### Not having the numbers as numeric is really screwing everything up
-# pop[37:56] <- lapply(pop[37:56], as.numeric)
-#pop[15:41] <- lapply(pop[15:41], as.numeric)
 pop$Genotype = as.character(pop$Genotype)
 pop$Organ = as.character(pop$Organ)
 pop$intage = pop$Age
 pop$Age = as.factor(pop$Age)#This made plotting categories possible
-#pop$Age = as.character(pop$Age) #This has to be treated as a character in order to group the right rows properly
-# pop[37:56] <- lapply(pop[37:56], factor)
 
 #Need the ratios
 pop$Bratio = pop$Bcells_events / pop$Singlets2_events
@@ -67,7 +56,6 @@ library("Rmisc")
 library("reshape2")
 #Need to remove dates that are not symmetrical for subtractions - Dates are 2/25/2018 and 12/6/2017
 #There is a missing thymus and only one thymus for one of the dates - Incomplete data
-
 popNoInc <- pop[!(pop$intage == 18 & pop$expDate=="2/25/2018" | pop$expDate=="12/6/2017"),]
 
 #Works fine with day 0, I don't remember what the problem was
@@ -77,21 +65,28 @@ popNoInc <- pop[!(pop$intage == 18 & pop$expDate=="2/25/2018" | pop$expDate=="12
 #A d56 spleen doesn't have a thymus partner
 popNoInc = popNoInc[!(popNoInc$FileID == "JA022518WK8M1WTS"),]
 
-#Grouping and then subtracting Thymus treg freq from Spleen
+#Grouping and then estimating Tregs from by using Thymic Treg ratios
 
 #The numbers don't work out too well with this format.
 popNoInc = popNoInc %>%
   group_by(Age, Genotype, expDate) %>% #expDate is to subtract only by the thymus from the same experiment
-  mutate(NaiveDerivedTregsRatio = X4TregRatio - X4TregRatio[Organ == 'Thymus'])
-#Tregs derived from the Thymus
-popNoInc$ThymusDerivedTregRatio = popNoInc$X4TregRatio - popNoInc$NaiveDerivedTregsRatio
-#Replacing the Negative Values with 0
-popNoInc$NaiveDerivedTregsRatio[popNoInc$NaiveDerivedTregsRatio < 0] <- 0
+  mutate(ThymicDerivedTregsCT = X4TregCT * X4TregRatio[Organ == 'Thymus'])
+popNoInc$NaiveDerivedTregsCT = popNoInc$X4TregCT - (popNoInc$ThymicDerivedTregsCT + popNoInc$X4TregProlCT)
+#Removing any negatives
+popNoInc$NaiveDerivedTregsCT[popNoInc$NaiveDerivedTregsCT < 0] <- 0
+popNoInc$NoTregCD4CT =  popNoInc$CD4CT - popNoInc$X4TregCT 
 
-#Calculating the Counts for modeling
-popNoInc$NaiveDerivedTregsCT = popNoInc$CD4CT * popNoInc$NaiveDerivedTregsRatio
-popNoInc$X4TregFromThymusCT = popNoInc$CD4CT * popNoInc$ThymusDerivedTregRatio
-popNoInc$NoTregCD4CT = popNoInc$CD4CT - (popNoInc$NaiveDerivedTregsCT + popNoInc$X4TregFromThymusCT)
+# Below caculations shouldn't be used. 
+# 
+# #Tregs derived from the Thymus
+# popNoInc$ThymusDerivedTregRatio = popNoInc$X4TregRatio - popNoInc$NaiveDerivedTregsRatio
+# #Replacing the Negative Values with 0
+# popNoInc$NaiveDerivedTregsRatio[popNoInc$NaiveDerivedTregsRatio < 0] <- 0
+# 
+# #Calculating the Counts for modeling
+# popNoInc$NaiveDerivedTregsCT = popNoInc$CD4CT * popNoInc$NaiveDerivedTregsRatio
+# popNoInc$X4TregFromThymusCT = popNoInc$CD4CT * popNoInc$ThymusDerivedTregRatio
+# popNoInc$NoTregCD4CT = popNoInc$CD4CT - (popNoInc$NaiveDerivedTregsCT + popNoInc$X4TregFromThymusCT)
 
 
 # popNoInc saved into a csv below
