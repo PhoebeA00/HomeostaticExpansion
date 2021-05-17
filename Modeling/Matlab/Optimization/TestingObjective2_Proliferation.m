@@ -1,4 +1,4 @@
-function obj= GrowthObjective(p)
+function obj= TestingObjective2_Proliferation(p)
 global Objective
 %load data
 Data = readtable('../RawData/ActivatedWTSpleen.csv');
@@ -54,6 +54,8 @@ for i = DataUsed
     end
     
 end
+
+
 disp(['Objective = ' num2str(Rsquare)])
 Objective = Rsquare;
 obj = Rsquare;

@@ -550,13 +550,12 @@ ggplot(summary, aes(x = variable, y = mean, fill = Sex)) +
                   width = 0.2,
                   position = position_dodge(0.9))
 ```
-
+#All Treg sources
 ```{r}
 library(tidyr)
 library(ggplot2)
 popActiv = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedWTSpleen.csv')
 popTregs2 = subset(popActiv, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "ThymicDerivedTregsCT", "X4TregCT"))
-popTregs2$X4TregProlCT = popTregs2$X4TregProlCT * 10**6
 
 #Prepare data fro ggplot
 
@@ -578,7 +577,6 @@ ggplot(longpopTregs2, aes(x = Age, y = value, color = variable)) +
 
 popActivKO = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/ActivatedKOSpleen.csv')
 popTregsKO = subset(popActivKO, select = c("Age", "X4TregProlCT", "NaiveDerivedTregsCT", "ThymicDerivedTregsCT", "X4TregCT"))
-popTregsKO$X4TregProlCT = popTregsKO$X4TregProlCT * 10**6
 
 #Prepare data fro ggplot
 
@@ -602,9 +600,32 @@ ggplot(longpopTregsKO, aes(x = Age, y = value, color = variable)) +
 # plot(popTregs2$NaiveDerivedTregsCT)
 # plot(popTregsKO$NaiveDerivedTregsCT)
 # summary(popTregsKO$NaiveDerivedTregsCT)
-plot(ActivatedWTSpleen$Thy)
 ```
+#KO Proliferating differences
+```{r}
+'~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/KOProl.csv'
 
+library(tidyr)
+library(ggplot2)
+KOProl = read.csv('~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/KOProl.csv')
+KOProl2 = subset(KOProl, select = c("Age", "NaiveProlCT", "ActivatedProlCT"))
+
+#Prepare data fro ggplot
+
+longKOProl2 = gather(KOProl2, variable, value, -Age)
+ggplot(longKOProl2, aes(x = Age, y = value, color = variable)) + 
+  geom_point(position = position_dodge(1), size = 2)+
+  stat_summary(aes(group=variable, color = variable), fun=mean, geom="line")+
+  labs(titles = "Naive vs. Activated Proliferation", x = "Age in Days", y = "Treg counts")+
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
+                 legend.key = element_rect(fill = "white", colour = "black"),
+                 legend.background = (element_rect(colour= "black", fill = "white")),
+        axis.title.x = element_text(face="bold", colour="black", size=20),
+        axis.title.y = element_text(face = "bold", colour = "black", size = 20),
+        plot.title = element_text(lineheight=.8, face="bold", size = 20),
+        axis.ticks.length=unit(.25, "cm"),
+        text = element_text(size=20))
+```
 
 
 
