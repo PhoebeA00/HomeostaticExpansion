@@ -1,7 +1,6 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-#Before continuing                                                                                             #
-#Run this in bash:                                                                                             #
-#~/my.work/PhD/HomestaticExpansionProject/Code/Stats\ plots\ and\ data\ management/CalculatingActivatedTCells.py
+# Before continuing                                                                                            #
+# Don't forget to run the python script that calculates activated T cell data                                  #
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 ##############################
@@ -9,17 +8,19 @@
 # Prepping data for Modeling #
 #                            #
 ##############################
+# This was made for only CD69 data
+# ActivationData = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
 
-ActivationData = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
-
+#Made from the CD44 data
+ActivationData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop2.csv")
 #Creating the naive T cells
 ActivationData$NaiveCT = ActivationData$NoTregCD4CT - ActivationData$ActivatedCD4CT
 
 #Deprecated, but keeping here just in case something comes up because I made this mistake
 #ActivationData$AllTregs = ActivationData$NaiveDerivedTregsCT + ActivationData$X4TregFromThymusCT
 
-#Saving the data to Modeldata for plotting
-write.csv(ActivationData, "~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
+# #Saving the data to Modeldata for plotting
+# write.csv(ActivationData, "~/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop.csv")
 
 #Preparing data for fitting
 ActivationData$NaiveDerivedTregsCT = ActivationData$NaiveDerivedTregsCT * 10**6
@@ -32,10 +33,13 @@ ActivationData$hours[ActivationData$hours == 0] <- 1 #the 0 won't work with my m
 ActivationData$X4TregProlCT[ActivationData$X4TregProlCT == 0] <- 1 #Have to get rid of that divide by zero nonsense
 ActivationData$NaiveDerivedTregsCT[ActivationData$NaiveDerivedTregsCT == 0] <- 1 #Have to get rid of that divide by zero nonsense
 ActivationData$X4TregProlCT = ActivationData$X4TregProlCT * 10**6
+ActivationData$CD4ProlCT =  ActivationData$CD4ProlCT * 10**6
 
 #########################################################
 #Estimating the Activated T Cells that are proliferating
 #########################################################
+library(dplyr)
+library("Rmisc")
 
 ActivationDataSpleen = subset(ActivationData, Organ == "Spleen")#Removing Thymus for the fitting process
 Rowtoadd = subset(ActivationDataSpleen, FileID == "JA042618D7WTS_1") #Need to have even numbers for the grouping to work
@@ -55,18 +59,23 @@ ActivatedKOSpleen = subset(ActivationDataSpleen, Genotype == 'KO')
 ActivatedKOSpleen$NaiveProlRatio = ActivatedKOSpleen$CD4ProlRatio - ActivatedKOSpleen$ActivatedProlRatio
 
 ActivatedKOSpleen$NaiveProlCT = ActivatedKOSpleen$NaiveCT * ActivatedKOSpleen$NaiveProlRatio
-ActivatedWTSpleen$NaiveProlCT = ActivatedWTSpleen$CD4ProlCT
+ActivatedWTSpleen$NaiveProlCT = ActivatedWTSpleen$NaiveCT * ActivatedWTSpleen$CD4ProlRatio
 
+ActivatedKOSpleen$ThymicNaive = ActivatedKOSpleen$NaiveCT - ActivatedKOSpleen$NaiveProlCT
+ActivatedWTSpleen$ThymicNaive = ActivatedWTSpleen$NaiveCT - ActivatedWTSpleen$NaiveProlCT
 
 #Setting up Activated Proliferating Counts
-ActivatedWTSpleen$ActivatedProlRatio[ActivatedWTSpleen$ActivatedProlRatio > 0] <- 0 #Assuming no activation proliferation in the WT data
+#ActivatedWTSpleen$ActivatedProlRatio[ActivatedWTSpleen$ActivatedProlRatio > 0] <- 0 #Assuming no activation proliferation in the WT data
 
 ActivatedKOSpleen$ActivatedProlCT = ActivatedKOSpleen$ActivatedProlRatio * ActivatedKOSpleen$ActivatedCD4CT
-ActivatedWTSpleen$ActivatedProlCT = ActivatedWTSpleen$ActivatedProlRatio * ActivatedWTSpleen$ActivatedCD4CT
+ActivatedWTSpleen$ActivatedProlCT = ActivatedWTSpleen$CD4ProlRatio * ActivatedWTSpleen$ActivatedCD4CT
 
 ActivatedWTSpleen$ActivatedProlCT[ActivatedWTSpleen$ActivatedProlCT == 0 ] <- 1 #To avaid that divide by zero nonsense
 ActivatedKOSpleen$ActivatedProlCT[ActivatedKOSpleen$ActivatedProlCT == 0 ] <- 1 #To avaid that divide by zero nonsense
 
+#Setting up Naive derived Activated T cells in the KO
+ActivatedKOSpleen$ActivatedNaiveCT = ActivatedKOSpleen$ActivatedCD4CT - ActivatedKOSpleen$ActivatedProlCT
+ActivatedWTSpleen$ActivatedNaiveCT = ActivatedWTSpleen$ActivatedCD4CT
 #Removing the datasets that have zero proliferation because we didn't use KI-67
 WTProl <- subset(ActivatedWTSpleen, CD4ProlRatio != 0 )
 KOProl <- subset(ActivatedKOSpleen, CD4ProlRatio != 0 )
@@ -75,14 +84,13 @@ KOProl <- subset(ActivatedKOSpleen, CD4ProlRatio != 0 )
 
 MyColumns = c("FileID", "Organ", "Age", "Genotype", "intage", "NaiveCT", 
               "ActivatedCD4CT", "X4TregCT","ThymicDerivedTregsCT", 
-              "X4TregProlCT", "NaiveDerivedTregsCT", "X4TregCT", "hours",
-              "ActivatedProlCT", "NaiveProlCT")
+              "X4TregProlCT", "NaiveDerivedTregsCT", "hours",
+              "ActivatedProlCT", "NaiveProlCT", "ThymicNaive", "ActivatedNaiveCT", "X4TregRatio")
 
 WTProl = WTProl[MyColumns]
 KOProl = KOProl[MyColumns]
 ActivatedWTSpleen = ActivatedWTSpleen[MyColumns]
 ActivatedKOSpleen = ActivatedKOSpleen[MyColumns]
-
 
 #SavingData for modeling
 write.csv(WTProl, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/WTProl.csv')
