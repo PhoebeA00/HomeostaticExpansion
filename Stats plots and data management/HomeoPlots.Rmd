@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #Preparing the data and the function
 library(ggplot2)
 library(scales)
+library(tidyr)
 ```
 Some info on the 'pop' dataset
 - 1:18 - meta data associated with the experiment that generated the data

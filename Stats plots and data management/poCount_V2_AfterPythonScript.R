@@ -92,6 +92,9 @@ KOProl = KOProl[MyColumns]
 ActivatedWTSpleen = ActivatedWTSpleen[MyColumns]
 ActivatedKOSpleen = ActivatedKOSpleen[MyColumns]
 
+
+KOProl$NaiveProlCT[KOProl$NaiveProlCT == 0] = 1
+KOProl$ActivatedProlCT[KOProl$ActivatedProlCT == 1] = 1
 #SavingData for modeling
 write.csv(WTProl, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/WTProl.csv')
 write.csv(KOProl, '~/my.work/PhD/HomestaticExpansionProject/Code/Modeling/Matlab/RawData/KOProl.csv')

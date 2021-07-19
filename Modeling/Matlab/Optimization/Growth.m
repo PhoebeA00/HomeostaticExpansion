@@ -1,4 +1,4 @@
-function dTdt = Growth(t, x, p, i)
+function dTdt = Growth(t, x, p, i, Genotype)
 %global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
 
 
@@ -18,7 +18,13 @@ kB = p(13);
 j = p(14);
 z = p(15);
 n = p(16);
-d = p(17);
+
+if Genotype == 1
+    d = p(17);
+elseif Genotype == 2
+    d = 0;
+end
+
 n1 = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,7 +32,6 @@ n1 = 1;
 % These should never be changed
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%d = 1000; %IL-2 production Rate
 f = 1.38629; %IL-2 degradation Rate
 
 %Initial conditions

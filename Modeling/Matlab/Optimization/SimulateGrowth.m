@@ -1,8 +1,50 @@
-function ModelData = SimulateGrowth(p)
-global N T R ThyN ActN ThyR DiffR Nprol Tprol Rprol I m tx
+function ModelData = SimulateGrowth(p, Genotype)
+global  tx
 %global  N T R I m ThyR RplR DiffR
 
 ModelData = zeros(length(tx),0);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-------Initial Conditions-----%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+if Genotype == 1
+    
+    N = 1027; %Naive T cells
+    T = 252; %Activated T Cells
+    R = 128; %T Regulatory Cells (10% of all T cells)
+    
+    ThyN = 18; %Thymic Derived Naive Cells
+    ActN = 252; % Activated Naive T Cells
+    ThyR = 1418; % Thymic Derived Tregs
+    DiffR = 1; %Naive Derived Tregs
+    
+    Nprol = 1008; %Self replicating naive T cells
+    Tprol = 0; %Self replicating activated T cells
+    Rprol = 29732; %Self replicating Tregs
+    
+    I = 0; %IL-2 Cytokine
+    m = 0.0023; %Average of the Thymus weight at day 0
+elseif Genotype == 2
+    
+    N = 1811; %Naive T cells
+    T = 173; %Activated T Cells
+    R = 198; %T Regulatory Cells (10% of all T cells)
+    
+    ThyN = 459; %Thymic Derived Naive Cells
+    ActN = 141; % Activated Naive T Cells
+    ThyR = 947; % Thymic Derived Tregs
+    DiffR = 1; %Naive Derived Tregs
+    
+    Nprol = 1352; %Self replicating naive T cells
+    Tprol = 32; %Self replicating activated T cells
+    Rprol = 30576; %Self replicating Tregs
+    
+    I = 0; %IL-2 Cytokine
+    m = 0.0023; %Average of the Thymus weight at day 0
+end
 
 T0 = [N T R ...
     ThyN ActN ThyR DiffR ... 
@@ -30,7 +72,7 @@ ModelData(1,12) = T0(12); % Average of the Thymus weight at day 0
 for i = 1:length(tx)-1
     ts = [tx(i),tx(i+1)];
     %options1 = odeset('NonNegative', 1);
-    sol = ode15s(@(t,x)Growth(t,x,p,i),ts,T0); %i is passed for the Thymus equation
+    sol = ode15s(@(t,x)Growth(t,x,p,i, Genotype),ts,T0); %i is passed for the Thymus equation
     T0 = [sol.y(1,end),sol.y(2,end),sol.y(3,end),sol.y(4,end),sol.y(5,end),...
         sol.y(6,end), sol.y(7,end),sol.y(8,end),  sol.y(9,end), sol.y(10,end),...
         sol.y(11,end), sol.y(12,end)];
