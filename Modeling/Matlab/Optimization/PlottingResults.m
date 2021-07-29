@@ -41,11 +41,13 @@ if Genotype == 1
     CellData = readtable('../RawData/ActivatedWTSpleen.csv');
     ProlData = readtable('../RawData/WTProl.csv');
     Gntype = "WT";
+    Order = "1_";
     
 elseif Genotype == 2
     CellData = readtable('../RawData/ActivatedKOSpleen.csv');
     ProlData = readtable('../RawData/KOProl.csv');
     Gntype = "KO";
+    Order = "2_";
 end
 
 %Setting up data for plotting
@@ -60,8 +62,8 @@ ProlData = ProlData(:,{ 'NaiveProlCT', 'ActivatedProlCT', 'X4TregProlCT', ...
 %Setting file names
 loc = '../Plots/';
 
-plt =  append (loc, Gntype, '_pops.png');
-plt2 = append (loc, Gntype, '_Hills.png');
+plt =  append (loc, Order, Gntype, '_1_pops.png');
+plt2 = append (loc, Order, Gntype, '_2_Hills.png');
 
 
 %Figure Positioning
@@ -169,7 +171,7 @@ title('Naive Derived Tregs')
 hold off
 
 saveas(PLT, sprintf(plt))
-
+%{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-------------------------Fixed Parameters---------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -258,4 +260,5 @@ uitable('Units','normalized',...
                  'ColumnWidth', {150 200 360});            
 
 saveas(PLT2, sprintf(plt2))
+%}
 end

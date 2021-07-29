@@ -4,6 +4,8 @@ global Objective WTerror KOerror
 Gntype = [1, 2];
 
 Rsquare = 0;
+nWT = 0;
+nKO = 0;
 
 for Genotype = Gntype
     %1 = WildType, 2 = IL-2 KO
@@ -43,10 +45,12 @@ for Genotype = Gntype
     %Setting up the hours
     DataHours = unique(CellData.hours);
     %Calculating R squared from the NON-proliferating populations
+    
     disp('**************HERES THE GENOTYPE LOOP****************')
     disp(['Genotype = ', num2str(Genotype)])
     disp(['Rsquare = ', num2str(Rsquare)])
     disp('***********************************************************')
+   
     
     for i = DataUsed
         %Calculates each data used at a time
@@ -68,6 +72,14 @@ for Genotype = Gntype
                 %RSquareValue = (SimulationValue - CellValue).^2;
                 RSquareValue = ((SimulationValue - CellValue)/CellValue).^2;
                 Rsquare = Rsquare + RSquareValue;
+              %{  
+                if Genotype == 1
+                    nWT = nWT +1;
+                elseif Genotype == 2
+                    nKO = nKO + 1;
+                end
+                %}
+                
                 
                 disp(['Data Number = ' num2str(i)])
                 disp(['Hour = ' num2str(hour)])
@@ -89,6 +101,8 @@ for Genotype = Gntype
     disp(['Rsquare = ' num2str(Rsquare)])
     disp(' ')
     disp('***********************************************************')
+    
+    
     %Calculating R squared from the proliferating populations
     ProlDataUsed = [1, 2, 3];
     % 1 = Self replicating naive T cells
@@ -125,7 +139,16 @@ for Genotype = Gntype
                     %RSquareValue = (SimulationValue - CellValue).^2;
                     RSquareValue = ((SimulationValue - CellValue)/CellValue).^2;
                     Rsquare = Rsquare + RSquareValue;
+                    %{
+                    if Genotype == 1
+                        nWT = nWT +1;
+                    elseif Genotype == 2
+                        nKO = nKO + 1;
+                    end
+                    %}
                 end
+                
+                
                 
                 
                 disp(['Data Number = ' num2str(i)])
@@ -135,6 +158,7 @@ for Genotype = Gntype
                 disp(['RSquareValue = ' num2str(RSquareValue)])
                 disp(['Rsquare = ' num2str(Rsquare)])
                 disp(' ')
+                
                 
             end
 
@@ -153,7 +177,10 @@ end
 disp(['Total Objective = ' num2str(Rsquare)])
 disp(['WT Objective = ' num2str(WTerror)])
 disp(['KO Objective = ' num2str(KOerror)])
+%disp(['WT n = ' num2str(nWT)])
+%disp(['KO n = ' num2str(nKO)])
 disp(' ')
+
 Objective = Rsquare;
 obj = Rsquare;
     

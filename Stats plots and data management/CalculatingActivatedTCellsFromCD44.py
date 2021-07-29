@@ -11,14 +11,14 @@ from collections import Counter
 ####################
 #Preparing My Data #
 ####################
-pop = pd.read_csv( "~/my.work/PhD/HomestaticExpansionProject/ModelData/NaiveTregDifferentiation.csv")
+pop = pd.read_csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/NaiveTregDifferentiation.csv")
 # Choosing spleen only data
 
-# Splnpop = pop.loc[pop['Organ'] == 'Spleen']
+Splnpop = pop.loc[pop['Organ'] == 'Spleen']
 
 # Removing Ages that we do not have information on in the pop file
 CD69Ages = [4, 7, 9, 12, 14, 18]
-ActivatedCD4pop = pop[pop.Age.isin(CD69Ages)].copy()
+ActivatedCD4pop = Splnpop[Splnpop.Age.isin(CD69Ages)].copy()
 
 ########################################
 # Preparing Genevieves Activation Data #

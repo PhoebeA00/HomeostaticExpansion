@@ -69,6 +69,7 @@ popNoInc$NaiveDerivedTregsCT = popNoInc$X4TregCT - (popNoInc$ThymicDerivedTregsC
 popNoInc$NaiveDerivedTregsCT[popNoInc$NaiveDerivedTregsCT < 0] <- 0
 popNoInc$NoTregCD4CT =  popNoInc$CD4CT - popNoInc$X4TregCT 
 
+
 ################################################
 #                                              #
 #Prepping Genevieves Data                      #
@@ -142,16 +143,13 @@ ActivData$AcivatedCells_pct = 100 - ActivData$pct_CD4_CD62L_pos
 ####################
 
 
+
 write.csv(pop, '~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv')
 # write.csv(CD69df, '~/my.work/PhD/HomestaticExpansionProject/ModelData/CD69DataFromGen.csv')
 write.csv(ActivData, "~/my.work/PhD/HomestaticExpansionProject/ModelData/TCellActivationSummary_EdittedinR.csv")
 write.csv(popNoInc, "~/my.work/PhD/HomestaticExpansionProject/ModelData/NaiveTregDifferentiation.csv")
+write.csv(popNoInc, "~/my.work/PhD/HomestaticExpansionProject/ModelData/wtf.csv")
+
 
 #This one calculates the activated T cell population from cd44 data
 #Copy and paste this on my computer (Jonathan Anzules), to bash: /home/jon/my.work/PhD/HomestaticExpansionProject/Code/Stats\ plots\ and\ data\ management/CalculatingActivatedTCellsFromCD44.py 
-
-
-
-# The code below calculates the activated T Cell population from the cd69 data
-#Run the python script: CalculatingActivatedTCells.py, then the poCount_V2_AfterPythonScript.R  
-#Copy and paste this on my computer (Jonathan Anzules), to bash: ~/my.work/PhD/HomestaticExpansionProject/Code/Stats\ plots\ and\ data\ management/CalculatingActivatedTCells.py

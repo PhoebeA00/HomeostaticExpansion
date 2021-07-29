@@ -1152,3 +1152,17 @@ ggplot(LongActivatedProlCT, aes(x = Age, y = value, color = variable)) +
 max(LongActivatedProlCT$value)
 seq(0,576000, length.out = 5 )
 ```
+
+```{r}
+pop = read.csv("~/my.work/PhD/HomestaticExpansionProject/ModelData/AfterCalculations.csv")
+popThym = subset(pop, Organ == "Thymus")
+
+plot(pop$OrganWeight, pop$CD4CT, xlim = c(0, 0.3),
+     main = "Total CD4 CT vs. Thymus Weight",
+     xlab = "Thymus weigth (grams)",
+     ylab = "CD4 Counts (10^6)",
+     pch = 16, cex = 1.3, col = "blue")
+abline(lm(pop$CD4CT~pop$OrganWeight))
+cor(pop$CD4CT,pop$OrganWeight)
+```
+

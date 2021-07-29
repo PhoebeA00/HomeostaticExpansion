@@ -4,11 +4,11 @@ global tx WTerror KOerror
 
 % Parameter Ranges
 %-------------------- Naive -----------------------%
-mu_min  = 1809500; %Naive T production rate
-mu_max = 1809500; 
+mu_min  = 2054700; %Naive T production rate
+mu_max = 2054700; 
 
-z_min = 0.53792; %Naive Self replication rate
-z_max = 0.53792;
+z_min = 0.3044; %Naive Self replication rate
+z_max = 0.3044;
 
 g_min = 0.1581;%Death rate of Naive
 g_max = 0.1581;
@@ -18,8 +18,8 @@ g_max = 0.1581;
 alpha_min = 3069.6;%33914; %Thymic derived Tregs
 alpha_max = 3069.6; %3000;%33914; 
 
-c_min = 0.063744; %Naive differentiation to Tregs
-c_max = 0.063744;
+c_min = 0.0420; %Naive Derived Tregs
+c_max = 0.0420;
 
 epsilon_min = 0.15017;%Self Replication rate of Tregs
 epsilon_max = 0.15017;
@@ -29,9 +29,9 @@ b_R_max = 0.79857;
 
 
 %--------------------Activated T -----------------------%
-
-beta_min = 3.9592; %activation rate
-beta_max = 3.9592;
+%0.6536
+beta_min = 1;%2.9434;%3.9592; %activation rate
+beta_max = 5;% 2.9434;%3.9592;
 
 a_min = 0.0948; %Self Replication rate for activated T cells
 a_max = 0.0948;
@@ -47,14 +47,14 @@ e_R_min = 393;%1.3744E-09; %Consumption rate of Tregs
 e_R_max = 393;
 
 %--------------------  Suppression -----------------------%
-kA_min = 362780; %Half suppression rate by Tregs
-kA_max = 362780; 
+kA_min = 200000;%308440; %Half suppression rate by Tregs
+kA_max = 400000;%308440; 
 
-j_min = 2.9788e-06; %Rate of desctruction of activated T cells
-j_max = 2.9788e-06; 
+j_min = 0.0000001;%2.9788e-06; %Rate of desctruction of activated T cells
+j_max = 0.0001;%2.9788e-06; 
 
-kB_min = 4.6319; %half suppression rate of Treg death rate
-kB_max = 4.6319;
+kB_min = 1;%4.6319; %half suppression rate of Treg death rate
+kB_max = 8;%4.6319;
 
 n_min = 1; %Controls the sigmoidicity - Hill coefficient
 n_max = 1;
@@ -121,6 +121,8 @@ Genotype = [1, 2];
 for i = Genotype
     PlottingResults(pOpt, i)
 end
+
+PlottingEverything(pOpt)
 
 %%
 

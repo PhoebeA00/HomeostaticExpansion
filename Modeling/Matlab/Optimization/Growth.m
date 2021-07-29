@@ -1,7 +1,6 @@
 function dTdt = Growth(t, x, p, i, Genotype)
 %global alpha epsilon a c b_R mu beta g b_T d e_T e_R f kA n
 
-
 alpha   = p(1);
 a       = p(2);
 kA      = p(3);
@@ -22,7 +21,7 @@ n = p(16);
 if Genotype == 1
     d = p(17);
 elseif Genotype == 2
-    d = 0;
+    d = 500;
 end
 
 n1 = 1;

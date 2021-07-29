@@ -13,6 +13,7 @@
 
 #Made from the CD44 data
 ActivationData = read.csv("/home/jon/my.work/PhD/HomestaticExpansionProject/ModelData/ActivatedCD4pop2.csv")
+
 #Creating the naive T cells
 ActivationData$NaiveCT = ActivationData$NoTregCD4CT - ActivationData$ActivatedCD4CT
 
