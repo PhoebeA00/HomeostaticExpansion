@@ -61,6 +61,7 @@ for Genotype = Gntype
         
 
         for j = 1:length(DataHours)
+            %Pull out all of the data needed; condition is hour match
             hour = DataHours(j);      
             CellDataIndex = Cells.hours == hour;
             CellDataForRSqr = Cells{CellDataIndex,1}; %Do not need hours anymore
@@ -75,7 +76,7 @@ for Genotype = Gntype
                 Rsquare = Rsquare + RSquareValue;
                 
                 if hour < 289
-                    RSquareValue = RSquareValue/100;
+                    RSquareValue = RSquareValue/10000;
                     Rsquare = Rsquare + RSquareValue;
                 else
                     RSquareValue = RSquareValue*10000;
@@ -157,7 +158,7 @@ for Genotype = Gntype
                     RSquareValue = ((SimulationValue - CellValue)/CellValue).^2;
                     
                     if hour < 289
-                        RSquareValue = RSquareValue/100;
+                        RSquareValue = RSquareValue/10000;
                         Rsquare = Rsquare + RSquareValue;
                     else
                         RSquareValue = RSquareValue*10000;

@@ -3,20 +3,25 @@ close all; clc
 global tx WTerror KOerror
 
 % Parameter Ranges
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 %-------------------- Naive -----------------------%
-mu_min  = 0.162; %0.28 %Naive T production rate
-mu_max = 0.162; 
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
-nK_min = 5734602;
-nK_max = 5734602;
+mu_min  = 0.175; %0.28 %Naive T production rate
+mu_max = 0.175; 
 
-z_min = 0.0153; %Naive Self replication rate
-z_max = 0.0153;
+nK_min = 5.474871965029323e+06;
+nK_max = 5.474871965029323e+06; %5734602;
 
-g_min = 0.0691;%Death rate of Naive
-g_max = 0.0691;
+z_min = 0.019; %Naive Self replication rate
+z_max = 0.019;
 
+g_min = 0.069944693966199;%Death rate of Naive
+g_max = 0.069944693966199;
+
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 %-------------------- Tregs -----------------------%
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
 alpha_min = 0.0015; %Thymic derived Tregs
 alpha_max = 0.0015; %3000;%33914; 
@@ -24,20 +29,21 @@ alpha_max = 0.0015; %3000;%33914;
 rK_min = 1000000;
 rK_max = 1000000;
 
-c_min = 0.001; %Naive Derived Tregs
-c_max = 0.001;
+c_min = 0.002072865287658; %Naive Derived Tregs
+c_max = 0.002072865287658;
 
 epsilon_min = 0.018;%Self Replication rate of Tregs
 epsilon_max = 0.018;
 
-b_R_min = 0.039;%Death Rate of Tregs
-b_R_max = 0.039;%0.79857;
+b_R_min = 0.057339990947437;%Death Rate of Tregs
+b_R_max = 0.057339990947437;%0.79857;
 
-
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 %--------------------Activated T -----------------------%
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-beta_min = 0.0776; %activation rate
-beta_max = 0.0776; %0.079 worked well (9)
+beta_min = 0.102; %activation rate
+beta_max = 0.102;
 
 a_min = 0.0076; %Self Replication rate for activated T cells
 a_max = 0.0076;
@@ -45,25 +51,31 @@ a_max = 0.0076;
 b_T_min = 0.031282;%Death Rate of T cells
 b_T_max = 0.031282;
 
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 %-------------------- Consumption Rates -----------------------%
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
+
 e_T_min = 100; %Consumption rate of T cells
 e_T_max = 100; %activated T cells consume at max 1/10 of what they make
 
 e_R_min = 200;%393; %Consumption rate of Tregs
 e_R_max = 200;
 
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 %--------------------  Suppression -----------------------%
-kA_min = 357750; %Half suppression rate by Tregs
-kA_max = 500000;
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-j_min = 8.97586e-7; %Rate of desctruction of activated T cells
-j_max = 8.97586e-7;
+kA_min = 414120; %Half suppression rate by Tregs
+kA_max = 414120;
 
-Ki_min = 0; %Half rate for activation suppression boost
-Ki_max = 10;%1.0516;
+j_min = 8.975834604883678e-08; %Rate of desctruction of activated T cells
+j_max = 8.975859999951009e-08;
 
-Kj_min = 2.4619; % Half rate for deactivation boost
-Kj_max = 2.4619;
+Ki_min = 8.9696; %Half rate for activation suppression boost
+Ki_max = 8.9696;%1.0516;
+
+Kj_min = 1; % Half rate for deactivation boost
+Kj_max = 8;
 
 kB_min = 4.2533;%half suppression rate of Treg death rate
 kB_max = 4.2533;
@@ -165,8 +177,6 @@ nK = pOpt(18);
 rK = pOpt(19);
 Ki = pOpt(20);
 Kj = pOpt(21);
-
-
 %%
 %-----Change this for saving files in a different location-----%
 FileLocation = './Data/ParameterSets.csv';
@@ -184,7 +194,7 @@ parameters = [mu, z, g, alpha, c, epsilon, b_R, beta, a, b_T,...
     e_T, e_R, kA, j, kB, n, d, f, nK, rK, Ki, Kj, error, WTerror, KOerror, EntryNumber];
 
 
-dlmwrite(FileLocation ,parameters,'delimiter', ',', '-append');
+dlmwrite(FileLocation ,parameters,'delimiter', ',',  'precision', 16,'-append');
 
 disp(['Entry Number - ' num2str(EntryNumber)])
 

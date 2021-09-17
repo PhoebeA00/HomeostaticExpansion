@@ -74,12 +74,12 @@ plot(tx, ModelData.ThyDerivedNaive)
 title('Thymic Naive')
 hold off
 
-%Calculating Treg Frequency
-TregFreq = ModelData.TregCT ./(ModelData.NaiveCT+ModelData.ActivCT);
-%TregFreq (TregFreq > 0.1) = NaN;
-subplot(3,4,4)
-plot(tx, TregFreq)
-title('Treg frequency')
+% %Calculating Treg Frequency
+% TregFreq = ModelData.TregCT ./(ModelData.NaiveCT+ModelData.ActivCT);
+% %TregFreq (TregFreq > 0.1) = NaN;
+% subplot(3,4,4)
+% plot(tx, TregFreq)
+% title('Treg frequency')
 
 %Activated CT
 subplot(3,4,5)
@@ -105,11 +105,11 @@ hold on
 plot(tx, ModelData.ActivCT)
 title('Activated Naive')
 hold off
-%IL-2
-subplot(3,4,8)
-plot(tx, ModelData.Il2)
-title('IL-2')
-hold off
+% %IL-2
+% subplot(3,4,8)
+% plot(tx, ModelData.Il2)
+% title('IL-2')
+% hold off
 %Treg CT
 subplot(3,4,9)
 scatter(CellData.hours, CellData.X4TregCT)

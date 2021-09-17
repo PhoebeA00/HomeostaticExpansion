@@ -2,10 +2,10 @@ close all; clc
 global tx
 
 FileName = 'Data/ParameterSets.csv';
-EntryNumber = 14;
+EntryNumber = 21;
 p = GetParameters(EntryNumber, FileName);
 
-mu= 0.162;%Thymic Naive
+mu= p(1);%Thymic Naive
 z = p(2); %Prol Naive
 g = p(3); %Naive Death
 alpha = p(4); %Thymic Tregs
@@ -25,7 +25,29 @@ d = p(17); %IL-2 production Rate
 nK = p(19); %Naive Carrying Capacity
 rK = p(20); %Treg Carrying Capacity
 Ki = p(21);%Half rate for activation suppression boost
-Kj = p(22);% Half rate for deactivation boost
+Kj = 0.001;% Half rate for deactivation boost
+
+% mu= 0.175;%Thymic Naive
+% z = 0.019; %Prol Naive
+% g = p(3); %Naive Death
+% alpha = p(4); %Thymic Tregs
+% c = p(5); %Naive Derived Tregs
+% epsilon = p(6); %Treg Prol
+% b_R = p(7); %Treg Death
+% beta =0.102; %Activation Rate
+% a = p(9); %Activated Prol
+% b_T = p(10); %ActT Death
+% e_T = p(11); %ActT Consumption
+% e_R = p(12); %Treg Consumption
+% kA = 314120; %Beta Suppression
+% j = 3.975834604883678e-07; %Deactivation
+% kB = p(15); %Treg Death Suppression
+% n = p(16);
+% d = p(17); %IL-2 production Rate
+% nK = p(19); %Naive Carrying Capacity
+% rK = p(20); %Treg Carrying Capacity
+% Ki = 3;%Half rate for activation suppression boost
+% Kj = p(22);% Half rate for deactivation boost
 
 
 %{
@@ -66,7 +88,7 @@ for i = Genotype
 end
 
 
-PlottingEverything(p0)
+% PlottingEverything(p0)
 
 %%
 
