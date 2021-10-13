@@ -1,9 +1,10 @@
 clc; clear; close all;
 %-------------------------------------------------------------------------------------------------------%
-%                                       Only make changes here                                              % 
-CondKeys = {'T', 'ActN', 'Tprol'};
-SampleSize = 10;
-PctChange = 0.25; %What percentage should the initial conditions vary?
+%                                       Only make changes here
+% Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
+CondKeys = {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
+SampleSize = 500;
+PctChange = 0.55; %What percentage should the initial conditions vary?
 EntryNumber = 21;
 %--------------------------------------------------------------------------------------------------------%
 
@@ -229,7 +230,7 @@ for iter = 1:SampleSize
             IWT(:,iter) = ModelData(:,11);
             
         elseif Gene ==2
-            NaiveCTWT(:,iter) = ModelData(:,1);
+            NaiveCTKO(:,iter) = ModelData(:,1);
             ActTCTKO(:,iter) = ModelData(:,2);
             TregCTKO(:,iter)= ModelData(:,3);
             %Non Proliferating Trackers
@@ -281,8 +282,8 @@ CellularData(:,:,11,2) = IKO;
 %------------ All Statistical calculations are done here------------------%
 StatsOfCells = CalculateTheFillRanges(CellularData);
 
-
-
+%----------------------Plotting the LHS Results-----------------------------%
+PlottingLHSResults(StatsOfCells, tx)
 
 
 

@@ -45,6 +45,8 @@ Defining the Numbers
 %}
 
 
+
+
 for gene = Genotype
     for pg = Pages
         for row = rows
@@ -72,46 +74,3 @@ for gene = Genotype
         end
     end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

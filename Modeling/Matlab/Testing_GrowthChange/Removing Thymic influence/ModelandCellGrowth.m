@@ -65,8 +65,8 @@ e_R_max = 200;
 %--------------------  Suppression -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-kA_min = 414120; %Half suppression rate by Tregs
-kA_max = 414120;
+kA_min = 314120; %Half suppression rate by Tregs
+kA_max = 314120;
 
 j_min = 8.975834604883678e-08; %Rate of desctruction of activated T cells
 j_max = 8.975859999951009e-08;

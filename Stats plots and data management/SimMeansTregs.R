@@ -147,5 +147,5 @@ ggplot(ProlKOData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Proliferating Tregs", x = "Age in hours", y = "Cell Counts")
-  scale_y_continuous(limits = c(0,665000))
+  labs(titles = "Proliferating Tregs", x = "Age in hours", y = "Cell Counts")+
+  scale_y_continuous(limits = c(0,820000))
