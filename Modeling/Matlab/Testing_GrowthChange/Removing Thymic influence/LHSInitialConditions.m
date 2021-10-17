@@ -3,7 +3,7 @@ clc; clear; close all;
 %                                       Only make changes here
 % Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
 CondKeys = {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
-SampleSize = 500;
+SampleSize = 50;
 PctChange = 0.55; %What percentage should the initial conditions vary?
 EntryNumber = 21;
 %--------------------------------------------------------------------------------------------------------%

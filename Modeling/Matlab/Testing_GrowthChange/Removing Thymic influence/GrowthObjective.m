@@ -1,4 +1,4 @@
-function obj= GrowthObjective(p)
+function obj= GrowthObjective(p, parameterStruct)
 global Objective WTerror KOerror
 %load data
 Gntype = [1, 2];
@@ -10,11 +10,11 @@ Rsquare = 0;
 for Genotype = Gntype
     %1 = WildType, 2 = IL-2 KO
     if Genotype == 1
-        CellData = readtable('../../RawData/ActivatedWTSpleen.csv');
-        ProlData = readtable('../../RawData/WTProl.csv');
+        CellData = parameterStruct.WildType.CellData;
+        ProlData = parameterStruct.WildType.ProlData;
     elseif Genotype == 2
-        CellData = readtable('../../RawData/ActivatedKOSpleen.csv');
-        ProlData = readtable('../../RawData/KOProl.csv');
+        CellData = parameterStruct.WildType.CellData;
+        ProlData = parameterStruct.WildType.ProlData;
     end
 
     CellData = CellData(:,{'NaiveCT', 'ActivatedCD4CT', 'X4TregCT', ...
