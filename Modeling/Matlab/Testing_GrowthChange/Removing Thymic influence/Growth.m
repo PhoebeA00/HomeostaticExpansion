@@ -21,7 +21,7 @@ n = p(16);
 if Genotype == 1
     d = p(17);
 elseif Genotype == 2
-    d = 500;
+    d = p(22);
 end
 
 nK = p(18);

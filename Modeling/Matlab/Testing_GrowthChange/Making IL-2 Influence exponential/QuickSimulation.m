@@ -8,7 +8,7 @@ p = GetParameters(EntryNumber, FileName);
 mu= 0.415;%Thymic Naive
 z = p(2); %Prol Naive
 g = p(3); %Naive Death
-alpha = p(4); %Thymic Tregs
+alpha = 0.0035; %Thymic Tregs
 c = p(5); %Naive Derived Tregs
 epsilon = p(6); %Treg Prol
 b_R = p(7); %Treg Death
@@ -19,13 +19,13 @@ e_T = p(11); %ActT Consumption
 e_R = p(12); %Treg Consumption
 kA = p(13); %Beta Suppression
 j = 2.215568109662751e-06; %Deactivation
-kB = p(15); %Treg Death Suppression
+kB = 10; %Treg Death Suppression
 n = p(16);
 d = p(17); %IL-2 production Rate
 nK = p(19); %Naive Carrying Capacity
 rK = p(20); %Treg Carrying Capacity
-Ki = 0.2;%Half rate for activation suppression boost
-Kj = 10;% Half rate for deactivation boost
+Ki = 3;%Half rate for activation suppression boost
+Kj = p(22);% Half rate for deactivation boost
 %{
 Keeping this here if I want to replace the top parameter set with normal
 values

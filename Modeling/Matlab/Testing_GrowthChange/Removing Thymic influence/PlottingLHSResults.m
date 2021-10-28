@@ -50,7 +50,7 @@ for gene = Genotype
         'hours'});
     
     %Setting up variables for saving the figure    
-    loc = './Plots/LHS_InitialConditions/';
+    loc = './Plots/LHS_Parameters/';
     plt = append(loc, Gntype, '_LHSinit.png');
     
     %Figure Positioning

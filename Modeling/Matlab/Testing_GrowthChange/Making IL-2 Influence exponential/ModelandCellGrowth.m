@@ -7,8 +7,8 @@ global tx WTerror KOerror
 %-------------------- Naive -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
-mu_min  = 0.3484; %0.28 %Naive T production rate
-mu_max = 0.64;
+mu_min  = 0.415; %0.28 %Naive T production rate
+mu_max = 0.415;
 
 nK_min = 8890464;
 nK_max = 8890464; % 85% of the maxmimum cd4CT of D56 mice, assuming 15% activation
@@ -17,14 +17,14 @@ z_min = 0.025; %Naive Self replication rate
 z_max = 0.025;
 
 g_min = 0.069944693966199;%Death rate of Naive
-g_max = 0.1;
+g_max = 0.069944693966199;
 
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 %-------------------- Tregs -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
 alpha_min = 0.0001; %Thymic derived Tregs
-alpha_max = 0.0016;
+alpha_max = 0.03;
 
 rK_min = 10459370; %mean of D56 Tregs
 rK_max = 10459370; 
@@ -42,8 +42,8 @@ b_R_max = 0.057339990947437;%0.79857;
 %--------------------Activated T -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-beta_min =  0.2;%0.102; %activation rate
-beta_max = 0.34;
+beta_min =  0.325;%0.102; %activation rate
+beta_max = 0.325;
 
 a_min = 0.006600026244555;%0.0076; %Self Replication rate for activated T cells
 a_max = 0.006600026244555;
@@ -68,17 +68,17 @@ e_R_max = 200;
 kA_min = 314120; %Half suppression rate by Tregs
 kA_max = 314120;
 
-Ki_min = 8.9696; %Half rate for activation suppression boost
-Ki_max = 8.9696;
+Ki_min = 0; %Half rate for activation suppression boost
+Ki_max = 10;
 
-j_min = 4.215568109662751e-06; %Rate of deactivation of activated T cells
-j_max = 4.215568109662751e-06;
+j_min = 2.215568109662751e-06; %Rate of deactivation of activated T cells
+j_max = 2.215568109662751e-06;
 
-Kj_min = 3.579392175432355; % Half ratde for deactivation boost
-Kj_max = 3.579392175432355;
+Kj_min = 0; % Half ratde for deactivation boost
+Kj_max = 10;
 
-kB_min = 4.2533;%half suppression rate of Treg death rate
-kB_max = 4.2533;
+kB_min = 0;%half suppression rate of Treg death rate
+kB_max = 10;
 
 n_min = 1; %Controls the sigmoidicity - Hill coefficient
 n_max = 1;

@@ -7,24 +7,24 @@ global tx WTerror KOerror
 %-------------------- Naive -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
-mu_min  = 0.3484; %0.28 %Naive T production rate
-mu_max = 0.64;
+mu_min  = 0.33; %0.28 %Naive T production rate
+mu_max = 0.4;
 
-nK_min = 8890464;
-nK_max = 8890464; % 85% of the maxmimum cd4CT of D56 mice, assuming 15% activation
+nK_min = 890464;
+nK_max = 5890464; % We can't find this from the data
 
 z_min = 0.025; %Naive Self replication rate
 z_max = 0.025;
 
-g_min = 0.069944693966199;%Death rate of Naive
-g_max = 0.1;
+g_min = 0.099949984022915;%Death rate of Naive
+g_max = 0.099949984022915;
 
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 %-------------------- Tregs -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 
-alpha_min = 0.0001; %Thymic derived Tregs
-alpha_max = 0.0016;
+alpha_min = 1.008459837677013e-04; %Thymic derived Tregs
+alpha_max = 1.008459837677013e-04;
 
 rK_min = 10459370; %mean of D56 Tregs
 rK_max = 10459370; 
@@ -32,18 +32,18 @@ rK_max = 10459370;
 c_min = 0.002072865287658; %Naive Derived Tregs
 c_max = 0.002072865287658;
 
-epsilon_min = 0.018;%Self Replication rate of Tregs
-epsilon_max = 0.018;
+epsilon_min = 0.001;%Self Replication rate of Tregs
+epsilon_max = 0.0110;
 
-b_R_min = 0.057339990947437;%Death Rate of Tregs
-b_R_max = 0.057339990947437;%0.79857;
+b_R_min = 0.01;%Death Rate of Tregs
+b_R_max = 0.01;
 
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 %--------------------Activated T -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-beta_min =  0.2;%0.102; %activation rate
-beta_max = 0.34;
+beta_min =  0.15; %0.313; %activation rate
+beta_max = 0.2101;
 
 a_min = 0.006600026244555;%0.0076; %Self Replication rate for activated T cells
 a_max = 0.006600026244555;
@@ -65,16 +65,16 @@ e_R_max = 200;
 %--------------------  Suppression -----------------------%
 %=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-%
 
-kA_min = 314120; %Half suppression rate by Tregs
-kA_max = 314120;
+kA_min = 114120; %Half suppression rate by Tregs
+kA_max = 414120;
 
-Ki_min = 8.9696; %Half rate for activation suppression boost
+Ki_min = 0.0001; %Half rate for activation suppression boost
 Ki_max = 8.9696;
 
-j_min = 4.215568109662751e-06; %Rate of deactivation of activated T cells
-j_max = 4.215568109662751e-06;
+j_min = 2.215568109662751e-07; %Rate of deactivation of activated T cells
+j_max = 2.215568109662751e-07;
 
-Kj_min = 3.579392175432355; % Half ratde for deactivation boost
+Kj_min = 3.579392175432355; % Half rate for deactivation boost
 Kj_max = 3.579392175432355;
 
 kB_min = 4.2533;%half suppression rate of Treg death rate
@@ -84,7 +84,11 @@ n_min = 1; %Controls the sigmoidicity - Hill coefficient
 n_max = 1;
 
 d_min = 1000; %IL-2 Production
-d_max = 1000; 
+d_max = 1000;
+
+d_KO_min = 10; %IL-2 KO, IL-2 production
+d_KO_max = 400;
+
 
 %Randomizing the initial parameter choices
 alpha = alpha_min + rand(1,1) * (alpha_max - alpha_min);
@@ -106,6 +110,7 @@ nK = nK_min + rand(1,1) * (nK_max - nK_min);
 rK = rK_min + rand(1,1) * (rK_max - rK_min);
 Ki = Ki_min + rand(1,1) * (Ki_max - Ki_min);
 Kj = Kj_min + rand(1,1) * (Kj_max - Kj_min);
+d_KO = d_KO_min + rand(1,1) * (d_KO_max - d_KO_min);
 
 %Making sure that the consumption of Tregs is greater than that of
 %activated T cell
@@ -118,16 +123,16 @@ while e_T > e_R
 end
 
 %------fmincon function arguments definitions-------
-p0 = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj];
+p0 = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj, d_KO];
 lb = [alpha_min, a_min, kA_min, e_T_min, e_R_min, g_min, ...
     b_T_min, b_R_min, epsilon_min, mu_min, beta_min, c_min, kB_min, j_min, z_min, n_min, d_min,...
-    nK_min, rK_min, Ki_min, Kj_min]; %[] lower bound
+    nK_min, rK_min, Ki_min, Kj_min, d_KO_min]; %[] lower bound
 ub = [alpha_max, a_max, kA_max, e_T_max, e_R_max, g_max, ...
     b_T_max, b_R_max, epsilon_max, mu_max, beta_max, c_max, kB_max, j_max, z_max, n_max, d_max,...
-    nK_max, rK_max, Ki_max, Kj_max]; %[] upper bound
+    nK_max, rK_max, Ki_max, Kj_max, d_KO_max]; %[] upper bound
 
 % no linear constraints
-A = [0 0 0 1 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
+A = [0 0 0 1 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
 b = 0;
 Aeq = [];
 beq = [];
@@ -200,6 +205,7 @@ nK = pOptimized(18);
 rK = pOptimized(19);
 Ki = pOptimized(20);
 Kj = pOptimized(21);
+dKO = pOptimized(22);
 %%
 %-----Change this for saving files in a different location-----%
 FileLocation = './Data/ParameterSets.csv';
@@ -214,7 +220,7 @@ end
 %d = 1000; %IL-2 production Rate
 f = 1.38629; %IL-2 degradation Rate
 parameters = [mu, z, g, alpha, c, epsilon, b_R, beta, a, b_T,...
-    e_T, e_R, kA, j, kB, n, d, f, nK, rK, Ki, Kj, error, WTerror, KOerror, EntryNumber];
+    e_T, e_R, kA, j, kB, n, d, f, nK, rK, Ki, Kj, dKO, error, WTerror, KOerror, EntryNumber];
 
 
 dlmwrite(FileLocation ,parameters,'delimiter', ',',  'precision', 16,'-append');

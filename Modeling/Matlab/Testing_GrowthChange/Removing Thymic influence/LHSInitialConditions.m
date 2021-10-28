@@ -21,7 +21,7 @@ c = p(5); %Naive Derived Tregs
 epsilon = p(6); %Treg Prol
 b_R = p(7); %Treg Death
 beta =p(8); %Activation Rate
-dplValue = p(9); %Activated Prol
+a = p(9); %Activated Prol
 b_T = p(10); %ActT Death
 e_T = p(11); %ActT Consumption
 e_R = p(12); %Treg Consumption
@@ -33,7 +33,7 @@ d = p(17); %IL-2 production Rate
 nK = p(19); %Naive Carrying Capacity
 rK = p(20); %Treg Carrying Capacity
 Ki = p(21);%Half rate for activation suppression boost
-Kj = 0.001;% Half rate for deactivation boost
+Kj = p(22);% Half rate for deactivation boost
 
 %{
 Keeping this here if I want to replace the top parameter set with normal
@@ -62,7 +62,7 @@ Kj = p(22);% Half rate for deactivation boost
 %}
 
 %Do not change this order
-p = [alpha, dplValue, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj];
+p = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj];
 
 
 % Choose a percentage here
@@ -135,8 +135,8 @@ for static = 1:length(keys(InitCond))
     keystring = keystring{1}; %Grab just the key string
     value = InitCond (keystring);  %Grabbing the keys value
 
-    dplValue = repelem(value, SampleSize); %duplicating the values
-    LHSConditions(keystring) = dplValue';
+    a = repelem(value, SampleSize); %duplicating the values
+    LHSConditions(keystring) = a';
     
 end
 

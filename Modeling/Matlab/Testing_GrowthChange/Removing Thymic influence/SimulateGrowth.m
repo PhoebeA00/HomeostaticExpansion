@@ -1,4 +1,4 @@
-    function ModelData = SimulateGrowth(p, Genotype)
+9    function ModelData = SimulateGrowth(p, Genotype)
 global  tx
 %global  N T R I m ThyR RplR DiffR
 

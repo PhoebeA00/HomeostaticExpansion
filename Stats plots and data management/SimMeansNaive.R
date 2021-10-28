@@ -25,10 +25,10 @@ ggplot(WTData, aes(x=Age, y=NaiveCT)) + geom_point() +
 
 # NAIVE T CELLS
 
-ggplot(WTData, aes(x=hours, y=NaiveCT)) + geom_point() +
+NaiveCTWT = ggplot(WTData, aes(x=hours, y=NaiveCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=NaiveCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -36,13 +36,13 @@ ggplot(WTData, aes(x=hours, y=NaiveCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Total Naive T Cell Count", x = "Age in hours", y = "Cell Counts")
+  labs(titles = "Total Naive T Cell Count(WT)", x = "Age in hours", y = "Cell Counts")
 
 #PROLIFERATING NAIVE
-ggplot(ProlWTData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
+ProlNaiveWT = ggplot(ProlWTData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ProlNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -50,14 +50,14 @@ ggplot(ProlWTData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Proliferating Naive T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Proliferating Naive T Cells(WT)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,4000000))
 
 #THYMIC NAIVE
-ggplot(WTData, aes(x=hours, y=ThymicNaive)) + geom_point() +
+ThymicNaiveWT = ggplot(WTData, aes(x=hours, y=ThymicNaive)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ThyNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -65,7 +65,7 @@ ggplot(WTData, aes(x=hours, y=ThymicNaive)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Thymic Derived Naive T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Thymic Derived Naive T Cells(WT)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,4000000))
 
 #############################################
@@ -75,10 +75,10 @@ ggplot(WTData, aes(x=hours, y=ThymicNaive)) + geom_point() +
 
 # NAIVE T CELLS
 
-ggplot(KOData, aes(x=hours, y=NaiveCT)) + geom_point() +
+NaiveCTKO = ggplot(KOData, aes(x=hours, y=NaiveCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=NaiveCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -86,14 +86,14 @@ ggplot(KOData, aes(x=hours, y=NaiveCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Total Naive T Cell Count", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Total Naive T Cell Count(KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,4000000))
 
 #PROLIFERATING NAIVE
-ggplot(ProlKOData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
+ProlNaiveKO = ggplot(ProlKOData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ProlNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -101,14 +101,14 @@ ggplot(ProlKOData, aes(x=hours, y=NaiveProlCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Proliferating Naive T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Proliferating Naive T Cells(KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,4000000))
 
 #THYMIC NAIVE
-ggplot(KOData, aes(x=hours, y=ThymicNaive)) + geom_point() +
+ThymicNaiveKO = ggplot(KOData, aes(x=hours, y=ThymicNaive)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ThyNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -116,6 +116,13 @@ ggplot(KOData, aes(x=hours, y=ThymicNaive)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Thymic Derived Naive T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Thymic Derived Naive T Cells(KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,4000000))
 
+NaivePlots = ggarrange(NaiveCTWT, ProlNaiveWT, ThymicNaiveWT, NaiveCTKO, ProlNaiveKO, ThymicNaiveKO,
+                    labels = c("A"),
+                    ncol = 3, nrow = 2)
+
+ggsave(file = "~/my.work/PhD/HomestaticExpansionProject/Figures/ForPaper/Figure3A.png", NaivePlots,
+       height = 8,
+       width = 18)

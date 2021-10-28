@@ -24,10 +24,10 @@ ggplot(WTData, aes(x=Age, y=NaiveCT)) + geom_point() +
 ##############################################
 
 #Total Tregs
-ggplot(WTData, aes(x=hours, y=X4TregCT)) + geom_point() +
+TregCTWT = ggplot(WTData, aes(x=hours, y=X4TregCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=TregCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -40,10 +40,10 @@ ggplot(WTData, aes(x=hours, y=X4TregCT)) + geom_point() +
 
 # Thymic Tregs
 
-ggplot(WTData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
+ThymicTregWT = ggplot(WTData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ThyTregs), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -55,10 +55,10 @@ ggplot(WTData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
   scale_y_continuous(limits = c(0,665000))
 
 #Naive Derived Tregs
-ggplot(WTData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
+NaiveTregWT = ggplot(WTData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=TregNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -70,10 +70,10 @@ ggplot(WTData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
   scale_y_continuous(limits = c(0,665000))
 
 #Proliferating Tregs
-ggplot(ProlWTData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
+ProlTregWT = ggplot(ProlWTData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ProlTreg), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -90,10 +90,10 @@ ggplot(ProlWTData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
 
 
 #Total Tregs
-ggplot(KOData, aes(x=hours, y=X4TregCT)) + geom_point() +
+TregCTKO = ggplot(KOData, aes(x=hours, y=X4TregCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
-  geom_line(data = ModeldataWT, aes(x = time, y=TregCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  geom_line(data = ModeldataKO, aes(x = time, y=TregCT), colour = "purple")+
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -106,10 +106,10 @@ ggplot(KOData, aes(x=hours, y=X4TregCT)) + geom_point() +
 
 # Thymic Tregs
 
-ggplot(KOData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
+ThymicTregKO = ggplot(KOData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
-  geom_line(data = ModeldataWT, aes(x = time, y=ThyTregs), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  geom_line(data = ModeldataKO, aes(x = time, y=ThyTregs), colour = "purple")+
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -121,10 +121,10 @@ ggplot(KOData, aes(x=hours, y=ThymicDerivedTregsCT)) + geom_point() +
   scale_y_continuous(limits = c(0,665000))
 
 #Naive Derived Tregs
-ggplot(KOData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
+NaiveTregKO = ggplot(KOData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
-  geom_line(data = ModeldataWT, aes(x = time, y=TregNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  geom_line(data = ModeldataKO, aes(x = time, y=TregNaive), colour = "purple")+
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -136,10 +136,10 @@ ggplot(KOData, aes(x=hours, y=NaiveDerivedTregsCT)) + geom_point() +
   scale_y_continuous(limits = c(0,665000))
 
 #Proliferating Tregs
-ggplot(ProlKOData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
+ProlTregKO = ggplot(ProlKOData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ProlTreg), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -149,3 +149,10 @@ ggplot(ProlKOData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
         text = element_text(size=20))+
   labs(titles = "Proliferating Tregs", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,820000))
+
+TregPlots = ggarrange(TregCTWT, ThymicTregWT, NaiveTregWT, ProlTregWT, TregCTKO, ThymicTregKO, NaiveTregKO, ProlTregKO,
+          labels = c("C"),
+          ncol = 4, nrow = 2)
+ggsave(file = "~/my.work/PhD/HomestaticExpansionProject/Figures/ForPaper/Figure3C.png", TregPlots,
+       height = 8,
+       width = 18)

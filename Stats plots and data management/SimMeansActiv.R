@@ -19,16 +19,17 @@ ModeldataKO$time = 0:431
 ggplot(WTData, aes(x=Age, y=NaiveCT)) + geom_point() +
   stat_summary(fun=mean, colour="red", geom="line")
 
+
 ###########################################
 #  WT - Acitve
 ##############################################
 
 # Total Activated
 
-ggplot(WTData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
+ActTCD4CTWT = ggplot(WTData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ActTCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -36,14 +37,14 @@ ggplot(WTData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Total Activated T Cell Count", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Total Activated T Cell Count(WT)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
 
 #PROLIFERATING ACTIVATED T
-ggplot(ProlWTData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
+ProlActTWT = ggplot(ProlWTData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ProlActT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -51,14 +52,14 @@ ggplot(ProlWTData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Proliferating Activated T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Proliferating Activated T Cells(WT)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
 
 #Naive Derived ActT
-ggplot(WTData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
+NaiveActTWT = ggplot(WTData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataWT, aes(x = time, y=ActTNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -66,7 +67,7 @@ ggplot(WTData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Naive Derived Activated T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Naive Derived Activated T Cells (WT)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
 
 #############################################
@@ -75,10 +76,10 @@ ggplot(WTData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
 
 # Total Activated
 
-ggplot(KOData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
+ActTCD4CTKO = ggplot(KOData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ActTCT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -86,14 +87,14 @@ ggplot(KOData, aes(x=hours, y=ActivatedCD4CT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Total Activated T Cell Count", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Total Activated T Cell Count (KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
 
 #PROLIFERATING ACTIVATED T
-ggplot(ProlKOData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
+ProlActTKO = ggplot(ProlKOData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ProlActT), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -101,14 +102,14 @@ ggplot(ProlKOData, aes(x=hours, y=ActivatedProlCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Proliferating Activated T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Proliferating Activated T Cells (KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
 
 #Naive Derived ActT
-ggplot(KOData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
+NaiveActTKO = ggplot(KOData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
   stat_summary(fun=mean, colour="black", geom="line")+
   geom_line(data = ModeldataKO, aes(x = time, y=ActTNaive), colour = "purple")+
-  theme(panel.background = element_rect(fill = "grey90", colour = "black", size = 2),
+  theme(panel.background = element_rect(fill = "white", colour = "black", size = 2),
         legend.key = element_rect(fill = "white", colour = "black"),
         legend.background = (element_rect(colour= "black", fill = "white")),
         axis.title.x = element_text( colour="black", size=20),
@@ -116,6 +117,13 @@ ggplot(KOData, aes(x=hours, y=ActivatedNaiveCT)) + geom_point() +
         plot.title = element_text(lineheight=.8,  size = 20),
         axis.ticks.length=unit(.25, "cm"),
         text = element_text(size=20))+
-  labs(titles = "Naive Derived Activated T Cells", x = "Age in hours", y = "Cell Counts")+
+  labs(titles = "Naive Derived Activated T Cells (KO)", x = "Age in hours", y = "Cell Counts")+
   scale_y_continuous(limits = c(0,7075000))
+
+ActTPlots = ggarrange(ActTCD4CTWT, ProlActTWT, NaiveActTWT, ActTCD4CTKO, ProlActTKO, NaiveActTKO,
+          labels = c("B"),
+          ncol = 3, nrow = 2)
   
+ggsave(file = "~/my.work/PhD/HomestaticExpansionProject/Figures/ForPaper/Figure3B.png", ActTPlots,
+       height = 8,
+       width = 18)
