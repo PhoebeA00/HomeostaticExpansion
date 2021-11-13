@@ -1,4 +1,5 @@
 library(ggplot2)
+library(ggpubr)
 
 ModeldataWT = read.csv("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/ModelOutputWT.csv")
 ModeldataKO = read.csv("~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/ModelOutputKO.csv")
@@ -153,6 +154,7 @@ ProlTregKO = ggplot(ProlKOData, aes(x=hours, y=X4TregProlCT)) + geom_point() +
 TregPlots = ggarrange(TregCTWT, ThymicTregWT, NaiveTregWT, ProlTregWT, TregCTKO, ThymicTregKO, NaiveTregKO, ProlTregKO,
           labels = c("C"),
           ncol = 4, nrow = 2)
+
 ggsave(file = "~/my.work/PhD/HomestaticExpansionProject/Figures/ForPaper/Figure3C.png", TregPlots,
        height = 8,
        width = 18)

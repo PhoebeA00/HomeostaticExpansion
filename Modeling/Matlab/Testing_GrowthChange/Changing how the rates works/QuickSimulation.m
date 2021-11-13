@@ -7,15 +7,15 @@ p = GetParameters(EntryNumber, FileName);
 
 
 mu= p(1);%Thymic Naive
-z = 0.001; %Prol Naive
+z = 0.002; %Prol Naive
 g = 0.001; %Naive Death
 alpha = p(4); %Thymic Tregs
 c = 0.1; %Naive Derived Tregs
 epsilon = p(6); %Treg Prol
 b_R = 0.01; %Treg Death
-beta =0.004; %Activation Rate
+beta =0.009; %Activation Rate
 a = 0.002; %Activated Prol
-b_T = 0.001; %ActT Death
+b_T = 0.0001; %ActT Death
 e_T = p(11); %ActT Consumption
 e_R = p(12); %Treg Consumption
 kA = 2.1837e+04; %Beta Suppression

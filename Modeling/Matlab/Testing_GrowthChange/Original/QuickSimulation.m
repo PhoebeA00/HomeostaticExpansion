@@ -5,7 +5,6 @@ FileName = 'Data/ParameterSets.csv';
 EntryNumber = 27;
 p = GetParameters(EntryNumber, FileName);
 
-
 mu= p(1);%Thymic Naive
 z = p(2); %Prol Naive
 g = p(3); %Naive Death
@@ -25,7 +24,7 @@ n = p(16);
 d = p(17); %IL-2 production Rate
 nK = p(19); %Naive Carrying Capacity
 rK = p(20); %Treg Carrying Capacity
-Ki = 0.001;%Half rate for activation suppression boost
+Ki = 0.2;%Half rate for activation suppression boost
 Kj = p(22);% Half rate for deactivation boost
 dKO = p(23);
 
@@ -68,7 +67,7 @@ for i = Genotype
 end
 
 
-PlottingEverything(p0)
+% PlottingEverything(p0)
 
 %%
 global  WTerror KOerror
