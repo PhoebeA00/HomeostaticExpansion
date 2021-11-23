@@ -114,7 +114,7 @@ ModelDataKO.TregLoss = b_R.*ModelDataKO.TregCT.*(1./(1+(ModelDataKO.Il2./kB).^n1
 
 %---Thymic Production---%
 ModelDataWT.TregThymicProductionIR = (alpha.*ModelDataWT.TregCT.*(1-(ModelDataWT.TregCT./rK)));
-ModelDataKO.TregThymicProductionIR = (alpha.*ModelDataKO.TregCT.*(1-(ModelDataKO.TregCT./rK)));
+ModelDataKO.TregThymicProductionIR = (alpha.*ModelDataWT.TregCT.*(1-(ModelDataWT.TregCT./rK)));
 
 %---Treg Self Replication---%
 ModelDataWT.TregProlIR = epsilon.*ModelDataWT.TregCT;
@@ -550,7 +550,7 @@ saveas(PLT3, sprintf(plt3))
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
 %             Figure 4 - Treg Balance
 %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
-PLT4 = figure('Visible', 'on');
+PLT4 = figure('Visible', 'off');
 set(PLT4,'Position',[left bottom width height]); %This sents the position of the figure itself
 
 %---Treg Gain---%

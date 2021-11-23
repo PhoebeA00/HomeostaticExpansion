@@ -2,11 +2,10 @@ clc; clear; close all;
 %-------------------------------------------------------------------------------------------------------%
 %                                       Only make changes here
 % Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
-CondKeys = {'mu'};
-SampleSize = 10;
-PctChange = 0.03; %What percentage should the initial conditions vary?
-EntryNumber = 27;
-PlotType = "Percentile"; % "Percentile" (10 and 90) or "Std" (1 std above and below the mean)
+CondKeys = {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
+SampleSize = 50;
+PctChange = 0.55; %What percentage should the initial conditions vary?
+EntryNumber = 21;
 %--------------------------------------------------------------------------------------------------------%
 
 %Preparing 
@@ -35,20 +34,65 @@ nK = p(19); %Naive Carrying Capacity
 rK = p(20); %Treg Carrying Capacity
 Ki = p(21);%Half rate for activation suppression boost
 Kj = p(22);% Half rate for deactivation boost
-dKO = p(23); %Production rate of IL-2 KO 
 
+%{
+Keeping this here if I want to replace the top parameter set with normal
+values
+mu= p(1);%Thymic Naive
+z = p(2); %Prol Naive
+g = p(3); %Naive Death
+alpha = p(4); %Thymic Tregs
+c = p(5); %Naive Derived Tregs
+epsilon = p(6); %Treg Prol
+b_R = p(7); %Treg Death
+beta =p(8); %Activation Rate
+a = p(9); %Activated Prol
+b_T = p(10); %ActT Death
+e_T = p(11); %ActT Consumption
+e_R = p(12); %Treg Consumption
+kA = p(13); %Beta Suppression
+j = p(14); %Deactivation
+kB = p(15); %Treg Death Suppression
+n = p(16);
+d = p(17); %IL-2 production Rate
+nK = p(19); %Naive Carrying Capacity
+rK = p(20); %Treg Carrying Capacity
+Ki = p(21);%Half rate for activation suppression boost
+Kj = p(22);% Half rate for deactivation boost
+%}
 
 %Do not change this order
+p = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj];
+
+
+% Choose a percentage here
+% choose witch parameters are going to be changed
+% Have the algorithm take care of only the values that you have chosen
+% 
+
+%{
+    Defining the Initial Conditions
+    N - Naive T cells
+    T - Activated T Cells
+    R - T Regulatory Cells
+    
+    ThyN - Thymic Derived Naive Cells
+    ActN - Activated Naive T Cells
+    ThyR - Thymic Derived Tregs
+    DiffR - Naive Derived Tregs
+    
+    Nprol - Self replicating naive T cells
+    Tprol - Self replicating activated T cells
+    Rprol - Self replicating Tregs
+    
+    I - IL-2 Cytokine
+%}
 
 
 %Generating map of Initial Conditions
-KeySets = {'mu', 'z', 'g', 'alpha', 'c', 'epsilon', 'b_R', 'beta', 'a', 'b_T', 'e_T', 'e_R', 'kA',...
-    'j', 'kB', 'n', 'd', 'nK', 'rK', 'Ki', 'Kj', 'dKO'};
-Values = {mu, z, g, alpha, c, epsilon, b_R, beta, a, b_T, e_T, e_R, kA, ...
-    j, kB, n, d, nK, rK, Ki, Kj, dKO};
-% Values = {p(1), p(2), p(3), p(4), p(5), p(6), p(7), p(8), p(9), p(10), p(11), p(12), p(13),...
-%     p(14), p(15), p(16), p(17), p(19), p(20), p(21), p(22), p(23)};
-ParamValues = containers.Map(KeySets, Values);
+KeySets = {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
+Values = {1027, 252, 128, 18, 252, 24, 1, 1008, 10, 510, 0.0001};
+InitCond = containers.Map(KeySets, Values);
 tx = 0:432; %Maximum amount of time - 18 days
 
 %Generating LHS Samples
@@ -56,14 +100,14 @@ par = length(CondKeys); %number of parameters being sampled
 LHSVector = lhsdesign(SampleSize,par, 'criterion','maximin','smooth','off');
 
 %Defining the sampling Map
-LHSParaSamples = containers.Map('KeyType', 'char', 'ValueType','any');
+LHSConditions = containers.Map('KeyType', 'char', 'ValueType','any');
 
 %Generating Samples
 for sample = 1:par
     
     CurrentKey = CondKeys(sample); 
     CurrentKey = CurrentKey{1}; %Extracting the string key
-    value = values(ParamValues, CondKeys(sample)); %Extracting the key's value
+    value = values(InitCond, CondKeys(sample)); %Extracting the key's value
     
     % calculate the min and max
     minI = value{1}-PctChange*value{1};
@@ -73,28 +117,28 @@ for sample = 1:par
     LHSCDFinv = unifinv(LHSVector(:,sample),minI,maxI);
     
     % save the new array to the map associated with the right key
-    LHSParaSamples(CurrentKey) = LHSCDFinv;
+    LHSConditions(CurrentKey) = LHSCDFinv;
 end 
 
-% Generating duplicate values for parameters that have not been
+
+% Generating duplicate values for initial condtions that have not been
 % through the LHS sampling. This is to make solving of future iterations
 % easier
 
-remove(ParamValues , CondKeys); %removes keys that were used for LHS
+remove(InitCond , CondKeys); %removes keys that were used for LHS
 
-for static = 1:length(keys(ParamValues))
-    ParamKeys = keys(ParamValues);
+for static = 1:length(keys(InitCond))
+    InitKeys = keys(InitCond);
     
     %Grab keys
-    keystring = ParamKeys(static);
+    keystring = InitKeys(static);
     keystring = keystring{1}; %Grab just the key string
-    value = ParamValues (keystring);  %Grabbing the keys value
+    value = InitCond (keystring);  %Grabbing the keys value
 
     a = repelem(value, SampleSize); %duplicating the values
-    LHSParaSamples(keystring) = a';
+    LHSConditions(keystring) = a';
     
 end
-
 
 %-----------------------------------------------------------------------------------------------%
 %                                     Preparing for Simulations
@@ -130,46 +174,32 @@ IKO = zeros(length(tx),SampleSize);
 
 Genotype = [1, 2]; %Will run simulation for both genotypes
 
-%Prepping the Parameter values for interation
-mu_LHS = LHSParaSamples('mu'); %Thymic Naive
-z_LHS = LHSParaSamples('z'); %Prol Naive
-g_LHS = LHSParaSamples('g'); %Naive Death
-alpha_LHS = LHSParaSamples('alpha'); %Thymic Tregs
-c_LHS = LHSParaSamples('c'); %Naive Derived Tregs
-epsilon_LHS = LHSParaSamples('epsilon'); %Treg Prol
-b_R_LHS = LHSParaSamples('b_R'); %Treg Death
-beta_LHS = LHSParaSamples('beta'); %Activation Rate
-a_LHS = LHSParaSamples('a'); %Activated Prol
-b_T_LHS = LHSParaSamples('b_T'); %ActT Death
-e_T_LHS = LHSParaSamples('e_T'); %ActT Consumption
-e_R_LHS = LHSParaSamples('e_R'); %Treg Consumption
-kA_LHS = LHSParaSamples('kA'); %Beta Suppression
-j_LHS = LHSParaSamples('j'); %Deactivation
-kB_LHS = LHSParaSamples('kB'); %Treg Death Suppression
-n_LHS = LHSParaSamples('n');
-d_LHS = LHSParaSamples('d'); %IL-2 production Rate
-nK_LHS = LHSParaSamples('nK'); %Naive Carrying Capacity
-rK_LHS = LHSParaSamples('rK'); %Treg Carrying Capacity
-Ki_LHS = LHSParaSamples('Ki');%Half rate for activation suppression boost
-Kj_LHS = LHSParaSamples('Kj');% Half rate for deactivation boost
-dKO_LHS = LHSParaSamples('dKO'); %Production rate of IL-2 KO 
-
-IterationNumber = 0;
+%Prepping the Initial conditions
+InitNaiveCT = LHSConditions('N');
+InitActTCT = LHSConditions('T');
+InitTregCT = LHSConditions('R');
+InitThyN = LHSConditions('ThyN');
+InitActN = LHSConditions('ActN');
+InitThyR = LHSConditions('ThyR');
+InitDiffR = LHSConditions('DiffR');
+InitNprol = LHSConditions('Nprol');
+InitTprol = LHSConditions('Tprol');
+InitRprol = LHSConditions('Rprol');
+InitI = LHSConditions('I');
 
 %Running Simulation
 for iter = 1:SampleSize
-    % Setting up the Init Conditions
-    N = 1027;
-    T = 252;
-    R = 128;
-    ThyN = 18;
-    ActN = 252;
-    ThyR = 24;
-    DiffR = 1;
-    Nprol = 1008;
-    Tprol = 0;
-    Rprol = 510;
-    I = 0.0001;
+    N = InitNaiveCT(iter);
+    T = InitActTCT(iter);
+    R = InitTregCT(iter);
+    ThyN = InitThyN(iter);
+    ActN = InitActN(iter);
+    ThyR = InitThyR(iter);
+    DiffR = InitDiffR(iter);
+    Nprol = InitNprol(iter);
+    Tprol = InitTprol(iter);
+    Rprol = InitRprol(iter);
+    I = InitI(iter);
     m = 0.0023; %Too lazy to remove this from every where rn
         
     T0 = [N T R ...
@@ -177,39 +207,10 @@ for iter = 1:SampleSize
     Nprol Tprol Rprol ...
     I m ];
     
-    %Setting up Parameters
-    mu = mu_LHS(iter);
-    z = z_LHS(iter);
-    g = g_LHS(iter);
-    alpha = alpha_LHS(iter);
-    c = c_LHS(iter);
-    epsilon = epsilon_LHS(iter);
-    b_R = b_R_LHS(iter);
-    beta = beta_LHS(iter);
-    a = a_LHS(iter);
-    b_T = b_T_LHS(iter);
-    e_T = e_T_LHS(iter);
-    e_R = e_R_LHS(iter);
-    kA = kA_LHS(iter);
-    j = j_LHS(iter);
-    kB = kB_LHS(iter);
-    n = n_LHS(iter);
-    d = d_LHS(iter);
-    nK = nK_LHS(iter);
-    rK = rK_LHS(iter);
-    Ki = Ki_LHS(iter);
-    Kj = Kj_LHS(iter);
-    dKO = dKO_LHS(iter);
-    
-    
-    p0 = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj, dKO];
-    
-    IterationNumber = IterationNumber + 1;
-    disp(['Iteration Number: ', num2str(IterationNumber)])
     for Gene = Genotype
         
         %------------------This is where the solving happens----------------%
-        ModelData = SimulateGrowthLHS(T0, tx,p0, Gene );
+        ModelData = SimulateGrowthLHS(T0, tx,p, Gene );
         %------------------------------------------------------------------------------%
         
         if Gene == 1        
@@ -278,47 +279,11 @@ CellularData(:,:,9,2) = TprolKO;
 CellularData(:,:,10,2) = RprolKO;
 CellularData(:,:,11,2) = IKO;
 
-%-----------------------------------------------------------------------------------------------%
-%                               Preparing to calculate rates
-%-----------------------------------------------------------------------------------------------%
-%Saving WT Data
-DataForRates.NaiveCT(:,:,1) = NaiveCTWT;
-DataForRates.ActTCT(:,:,1) = ActTCTWT;
-DataForRates.TregCT(:,:,1) = TregCTWT;
-DataForRates.ThyN(:,:,1) = ThyNWT;
-DataForRates.ActN(:,:,1) = ActNWT;
-DataForRates.ThyR(:,:,1) = ThyRWT;
-DataForRates.DiffR(:,:,1) = DiffRWT;
-DataForRates.Nprol(:,:,1) = NprolWT;
-DataForRates.Tprol(:,:,1) = TprolWT;
-DataForRates.Rprol(:,:,1) = RprolWT;
-DataForRates.I(:,:,1) = IWT;
-%Saving KO Data
-DataForRates.NaiveCT(:,:,2) = NaiveCTKO;
-DataForRates.ActTCT(:,:,2) = ActTCTKO;
-DataForRates.TregCT(:,:,2) = TregCTKO;
-DataForRates.ThyN(:,:,2) = ThyNKO;
-DataForRates.ActN(:,:,2) = ActNKO;
-DataForRates.ThyR(:,:,2) = ThyRKO;
-DataForRates.DiffR(:,:,2) = DiffRKO;
-DataForRates.Nprol(:,:,2) = NprolKO;
-DataForRates.Tprol(:,:,2) = TprolKO;
-DataForRates.Rprol(:,:,2) = RprolKO;
-DataForRates.I(:,:,2) = IKO;
-
-
-%%
-ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p);
-
-%%
-PlottingFillPrm(ModelRates, tx, PlotType)
-
-%%
 %------------ All Statistical calculations are done here------------------%
 StatsOfCells = CalculateTheFillRanges(CellularData);
-%%
+
 %----------------------Plotting the LHS Results-----------------------------%
-PlottingLHSResults(StatsOfCells, tx, "Std")
+PlottingLHSResults(StatsOfCells, tx)
 
 
 

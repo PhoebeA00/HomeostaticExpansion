@@ -308,10 +308,7 @@ DataForRates.I(:,:,2) = IKO;
 
 
 %%
-ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p);
-
-%%
-PlottingFillPrm(ModelRates, tx, PlotType)
+Model
 
 %%
 %------------ All Statistical calculations are done here------------------%

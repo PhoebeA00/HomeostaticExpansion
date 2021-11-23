@@ -5,20 +5,20 @@ FileName = 'Data/ParameterSets.csv';
 EntryNumber = 27;
 p = GetParameters(EntryNumber, FileName);
 
-mu= p(1);%Thymic Naive
+mu= 0.393;%Thymic Naive
 z = p(2); %Prol Naive
 g = p(3); %Naive Death
 alpha = p(4); %Thymic Tregs
 c = p(5); %Naive Derived Tregs
 epsilon = p(6); %Treg Prol
 b_R = p(7); %Treg Death
-beta =0.312; %Activation Rate
+beta =p(8); %Activation Rate
 a = p(9); %Activated Prol
 b_T = p(10); %ActT Death
 e_T = p(11); %ActT Consumption
 e_R = p(12); %Treg Consumption
 kA = p(13); %Beta Suppression
-j = 3.2156e-07; %Deactivation
+j = p(14); %Deactivation
 kB = p(15); %Treg Death Suppression
 n = p(16);
 d = p(17); %IL-2 production Rate
@@ -67,7 +67,7 @@ for i = Genotype
 end
 
 
-PlottingEverything(p0)
+% PlottingEverything(p0)
 
 %%
 global  WTerror KOerror

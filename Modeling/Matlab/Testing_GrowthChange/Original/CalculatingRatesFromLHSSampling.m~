@@ -62,7 +62,7 @@ rows = 1:433; %432 hours in the simulation
 % rates for each of those iterations. 
 for gene = Genotype
     for iter = 1:SampleSize
-        %Proliferating naive T cells
+        %Nai
         ModelRates.NaiveProl(:, iter, gene) = z .* DataForRates.NaiveCT(:, iter, gene);
         ModelRates
     end

@@ -3,7 +3,7 @@ clc; clear; close all;
 %                                       Only make changes here
 % Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
 CondKeys = {'mu'};
-SampleSize = 10;
+SampleSize = 10000;
 PctChange = 0.03; %What percentage should the initial conditions vary?
 EntryNumber = 27;
 PlotType = "Percentile"; % "Percentile" (10 and 90) or "Std" (1 std above and below the mean)
@@ -278,42 +278,6 @@ CellularData(:,:,9,2) = TprolKO;
 CellularData(:,:,10,2) = RprolKO;
 CellularData(:,:,11,2) = IKO;
 
-%-----------------------------------------------------------------------------------------------%
-%                               Preparing to calculate rates
-%-----------------------------------------------------------------------------------------------%
-%Saving WT Data
-DataForRates.NaiveCT(:,:,1) = NaiveCTWT;
-DataForRates.ActTCT(:,:,1) = ActTCTWT;
-DataForRates.TregCT(:,:,1) = TregCTWT;
-DataForRates.ThyN(:,:,1) = ThyNWT;
-DataForRates.ActN(:,:,1) = ActNWT;
-DataForRates.ThyR(:,:,1) = ThyRWT;
-DataForRates.DiffR(:,:,1) = DiffRWT;
-DataForRates.Nprol(:,:,1) = NprolWT;
-DataForRates.Tprol(:,:,1) = TprolWT;
-DataForRates.Rprol(:,:,1) = RprolWT;
-DataForRates.I(:,:,1) = IWT;
-%Saving KO Data
-DataForRates.NaiveCT(:,:,2) = NaiveCTKO;
-DataForRates.ActTCT(:,:,2) = ActTCTKO;
-DataForRates.TregCT(:,:,2) = TregCTKO;
-DataForRates.ThyN(:,:,2) = ThyNKO;
-DataForRates.ActN(:,:,2) = ActNKO;
-DataForRates.ThyR(:,:,2) = ThyRKO;
-DataForRates.DiffR(:,:,2) = DiffRKO;
-DataForRates.Nprol(:,:,2) = NprolKO;
-DataForRates.Tprol(:,:,2) = TprolKO;
-DataForRates.Rprol(:,:,2) = RprolKO;
-DataForRates.I(:,:,2) = IKO;
-
-
-%%
-ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p);
-
-%%
-PlottingFillPrm(ModelRates, tx, PlotType)
-
-%%
 %------------ All Statistical calculations are done here------------------%
 StatsOfCells = CalculateTheFillRanges(CellularData);
 %%
