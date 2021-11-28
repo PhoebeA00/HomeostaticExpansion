@@ -2,9 +2,9 @@ clc; clear; close all;
 %-------------------------------------------------------------------------------------------------------%
 %                                       Only make changes here
 % Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
-CondKeys = {'mu'};
-SampleSize = 10;
-PctChange = 0.03; %What percentage should the initial conditions vary?
+CondKeys = {'b_R', 'd', 'dKO', 'kB'};
+SampleSize = 5000;
+PctChange = 0.90; %What percentage should the initial conditions vary?
 EntryNumber = 27;
 PlotType = "Percentile"; % "Percentile" (10 and 90) or "Std" (1 std above and below the mean)
 %--------------------------------------------------------------------------------------------------------%
@@ -307,18 +307,18 @@ DataForRates.Rprol(:,:,2) = RprolKO;
 DataForRates.I(:,:,2) = IKO;
 
 
-%%
+
+%------------ All Statistical calculations from the model are done here------------------%
+StatsOfCells = CalculateTheFillRanges(CellularData);
+
+%------------ Rates calculated and stats for those rates------------------%
 ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p);
 
-%%
-PlottingFillPrm(ModelRates, tx, PlotType)
+%------------ Plotting lhs rates results------------------%
+PlottingFillPrm(ModelRates, StatsOfCells, tx, PlotType)
 
-%%
-%------------ All Statistical calculations are done here------------------%
-StatsOfCells = CalculateTheFillRanges(CellularData);
-%%
-%----------------------Plotting the LHS Results-----------------------------%
-PlottingLHSResults(StatsOfCells, tx, "Std")
+%----------------------Plotting Model results-----------------------------%
+PlottingLHSResults(StatsOfCells, tx, PlotType)
 
 
 

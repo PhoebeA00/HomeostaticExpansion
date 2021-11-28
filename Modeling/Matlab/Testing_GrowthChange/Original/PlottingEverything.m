@@ -64,6 +64,8 @@ ModelDataKO.Properties.VariableNames = {'NaiveCT' 'ActivCT' 'TregCT' ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% IR = Instantaneous Rates
+
 %-=-=-=-=-=-=-=-=-=-=-=%
 %               Naive
 %-=-=-=-=-=-=-=-=-=-=-=%

@@ -58,13 +58,37 @@ dKO = p(23); %Production rate of IL-2 KO
 
 Genotype = [1, 2];%wt =1 ko = 2
 rows = 1:433; %432 hours in the simulation
-% Below I will loop over each genotype and iteration. and calculate the
-% rates for each of those iterations. 
+% Below I will loop over each genotype and iteration and calculate the
+% rates for each of those iterations. The results are saved in a data
+% struct for whatever rate I am intersted it.
 for gene = Genotype
     for iter = 1:SampleSize
+        
+        %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
+        %                   Naive T cells
+        %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
+        
         %Proliferating naive T cells
         ModelRates.NaiveProl(:, iter, gene) = z .* DataForRates.NaiveCT(:, iter, gene);
-        ModelRates
+        
+        %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
+        %            Regulatory T Cells
+        %-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=%
+        
+        % Treg Death Rate
+        ModelRates.TregDeath(:,iter,gene) = b_R .* DataForRates.TregCT(:, iter, gene)...
+            .* (1 ./ (1 + (DataForRates.I(:, iter, gene) ./ kB).^ n ));
+        
+        % Thymic production rate
+        ModelRates.ThyTreg(:, iter,gene)= (alpha .* DataForRates.TregCT(:, iter, gene) ...
+            .* (1 - (DataForRates.TregCT(:, iter, gene) ./ rK)));
+        
+        %Hill suppression Treg death rate
+        ModelRates.TregDeathHill(:, iter, gene) = (1 ./ (1 + (DataForRates.I(:, iter, gene) ./ kB).^ n ));
+        
+        %Proliferating Tregs
+        ModelRates.ProlTregs(:, iter, gene) = epsilon .* DataForRates.TregCT(:, iter, gene);
+        
     end
 end
 

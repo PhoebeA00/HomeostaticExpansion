@@ -202,9 +202,6 @@ for Genotype = Gntype
         KOerror = Rsquare - WTerror;
     end
     
-    %Here is where I should save the csv fiile
-    
-    
 end
 
 disp(['Total Objective = ' num2str(Rsquare)])
