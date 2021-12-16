@@ -4,11 +4,29 @@ global Objective WTerror KOerror
 Gntype = [1, 2];
 
 Rsquare = 0;
-% nWT = 0;
-% nKO = 0;
+nWT = 0;
+nKO = 0;
 
 for Genotype = Gntype
     %1 = WildType, 2 = IL-2 KO
+    
+    %Making an empty dataframe, where everything is going to appended to
+    VarNames = {'Population', 'Hour', 'SimulationValue', 'CellValue', 'RsquareValue' };
+    ObjectiveData = array2table(zeros(0,5));
+    ObjectiveData.Properties.VariableNames = VarNames;
+
+    %Setting up a small hash for the variable names. To be used when making a
+    %table
+    keys = {1, 2, 3, 4, 5, 6, 7};
+    Values = {'NaiveTCT', 'ActTCT', 'TregCT', 'ThyNaive', 'ActivatedNaive', 'ThyTregs', 'NaiveTregs'};
+    CellMap = containers.Map(keys, Values);
+
+    %Setting up the hash for Proliferating cell population
+    keysProl = {1, 2, 3};
+    ValuesProl = {'NaiveProl', 'ActTProl', 'TregProl'};
+    ProlMap= containers.Map(keysProl, ValuesProl);
+    
+    
     if Genotype == 1
         CellData = parameterStruct.WildType.CellData;
         ProlData = parameterStruct.WildType.ProlData;
@@ -44,15 +62,11 @@ for Genotype = Gntype
 
     %Setting up the hours
     DataHours = unique(CellData.hours);
-    %Calculating R squared from the NON-proliferating populations
     
     
-%     disp('**************HERES THE GENOTYPE LOOP****************')
-%     disp(['Genotype = ', num2str(Genotype)])
-%     disp(['Rsquare = ', num2str(Rsquare)])
-%     disp('***********************************************************')
-   
-    
+    %---------------------------------------------------------------------------------%
+    %Calculating R squared from the NON-proliferating populations 
+    %---------------------------------------------------------------------------------%    
     for i = DataUsed
         %Calculates each data used at a time
         %Cell data numbers match 
@@ -75,31 +89,23 @@ for Genotype = Gntype
                 RSquareValue = ((SimulationValue - CellValue)/CellValue).^2;
                 Rsquare = Rsquare + RSquareValue;
                 
-                if hour < 289
-                    RSquareValue = RSquareValue/10000;
-                    Rsquare = Rsquare + RSquareValue;
-                else
-                    RSquareValue = RSquareValue*10000;
-                    Rsquare = Rsquare + RSquareValue;
-                end   
-              %{  
-                Just to see how many data points there are between the
-                genotypes
+               
+                             
+%                 Just to see how many data points there are between the
+%                 genotypes
                 if Genotype == 1
                     nWT = nWT +1;
                 elseif Genotype == 2
                     nKO = nKO + 1;
                 end
-                %}
+              
+                
+                % Preparing name of the population for the df
+                Population =  CellMap(i);
+                row = {Population, hour, SimulationValue, CellValue, RSquareValue};
+                ObjectiveData = [ObjectiveData; row ]; %Appending the data
                 
                 
-%                 disp(['Data Number = ' num2str(i)])
-%                 disp(['Hour = ' num2str(hour)])
-%                 disp(['Cell Value = ' num2str(CellValue)])
-%                 disp(['SimulationValue = ' num2str(SimulationValue)])
-%                 disp(['RSquareValue = ' num2str(RSquareValue)])
-%                 disp(['Rsquare = ' num2str(Rsquare)])
-%                 disp(' ')
               
 
             end
@@ -122,27 +128,14 @@ for Genotype = Gntype
     % 3 = Self replicating Tregs
     % 4 = Hours
     
-    %{
-    if Genotype == 2
-        disp('KO Objective before Proliferation data')
-        disp(['Total Objective = ' num2str(Rsquare)])
-    end
-    %}
+   
     
     for i = ProlDataUsed
         %Calculates each data used at a time
         %Cell data numbers match 
         Cells = ProlData(:,[i,4]); %Grabs data and hours
         SimulationData = ModelData(:,i+7); %The +7 makes sure that the right data in the ModelData is chosen
-        
-%                 disp(['Data Number = ' num2str(i)])
-%                 disp(['Hour = ' num2str(hour)])
-%                 disp(['Cell Value = ' num2str(CellValue)])
-%                 disp(['SimulationValue = ' num2str(SimulationValue)])
-%                 disp(['RSquareValue = ' num2str(RSquareValue)])
-%                 disp(['Rsquare = ' num2str(Rsquare)])
-%                 disp(' ')
-%                 
+
 
         for j = 1:length(DataHours)
             hour = DataHours(j);      
@@ -156,39 +149,24 @@ for Genotype = Gntype
             for h = 1:length(CellDataForRSqr)
 
                 CellValue = CellDataForRSqr(h);
+                
                 if (CellValue ~= 1)
                     %RSquareValue = (SimulationValue - CellValue).^2;
                     RSquareValue = ((SimulationValue - CellValue)/CellValue).^2;
-                    
-                    if hour < 289
-                        RSquareValue = RSquareValue/10000;
-                        Rsquare = Rsquare + RSquareValue;
-                    else
-                        RSquareValue = RSquareValue*10000;
-                        Rsquare = Rsquare + RSquareValue;
-                    end                  
-                    
-                    
-                    %{
+                    Rsquare = Rsquare + RSquareValue;
+                     
+                    % Preparing name of the population for the df
+                    Population =  ProlMap(i);
+                    row = {Population, hour, SimulationValue, CellValue, RSquareValue};
+                    ObjectiveData = [ObjectiveData; row ]; %Appending the data
+                   
                     if Genotype == 1
                         nWT = nWT +1;
                     elseif Genotype == 2
                         nKO = nKO + 1;
                     end
-                    %}
+                   
                 end
-                
-                
-                
-                
-%                 disp(['Data Number = ' num2str(i)])
-%                 disp(['Hour = ' num2str(hour)])
-%                 disp(['Cell Value = ' num2str(CellValue)])
-%                 disp(['SimulationValue = ' num2str(SimulationValue)])
-%                 disp(['RSquareValue = ' num2str(RSquareValue)])
-%                 disp(['Rsquare = ' num2str(Rsquare)])
-%                 disp(' ')
-%                 
                 
             end
 
@@ -196,16 +174,34 @@ for Genotype = Gntype
         
     end
     
-    if Genotype == 1
-        WTerror = Rsquare;        
-    elseif Genotype == 2
-        KOerror = Rsquare - WTerror;
-    end
+
     
     %Here is where I should save the csv fiile
+    % Doing the final calculations of the Objective Table
+    SumOfRsquare = sum(ObjectiveData.RsquareValue);
+    ObjectiveData.PctContribution = ObjectiveData.RsquareValue / SumOfRsquare;
+    
+    
+    %Removing heavy weights from being considered
+    % ObjectiveRemoval will be refreshed for every Genotype loop
+    Contributions = ObjectiveData.PctContribution;
+    NewData = ObjectiveData(Contributions > 0.1, :);
+    ObjectiveRemoval = sum(NewData.RsquareValue);
+    
+    Rsquare = Rsquare - ObjectiveRemoval;
+    if Genotype == 1
+        WTerror = Rsquare;
+        writetable(ObjectiveData, './Data/ObjectiveDataWT.csv')
+    elseif Genotype == 2
+        KOerror = Rsquare - WTerror ;
+        writetable(ObjectiveData, './Data/ObjectiveDataKO.csv')
+    end
+    
     
     
 end
+
+
 
 disp(['Total Objective = ' num2str(Rsquare)])
 disp(['WT Objective = ' num2str(WTerror)])

@@ -3,10 +3,11 @@ clc; clear; close all;
 %                                       Only make changes here
 % Here are the choices {'N', 'T', 'R', 'ThyN', 'ActN', 'ThyR', 'DiffR', 'Nprol', 'Tprol', 'Rprol', 'I'};
 CondKeys = {'b_R', 'd', 'dKO', 'kB'};
-SampleSize = 5000;
-PctChange = 0.90; %What percentage should the initial conditions vary?
+SampleSize = 1000;
+PctChange = 0.9; %What percentage should the initial conditions vary?
 EntryNumber = 27;
 PlotType = "Percentile"; % "Percentile" (10 and 90) or "Std" (1 std above and below the mean)
+tx = 1:1008; %Maximum amount of time - 18 days
 %--------------------------------------------------------------------------------------------------------%
 
 %Preparing 
@@ -49,7 +50,7 @@ Values = {mu, z, g, alpha, c, epsilon, b_R, beta, a, b_T, e_T, e_R, kA, ...
 % Values = {p(1), p(2), p(3), p(4), p(5), p(6), p(7), p(8), p(9), p(10), p(11), p(12), p(13),...
 %     p(14), p(15), p(16), p(17), p(19), p(20), p(21), p(22), p(23)};
 ParamValues = containers.Map(KeySets, Values);
-tx = 0:432; %Maximum amount of time - 18 days
+
 
 %Generating LHS Samples
 par = length(CondKeys); %number of parameters being sampled
@@ -309,16 +310,16 @@ DataForRates.I(:,:,2) = IKO;
 
 
 %------------ All Statistical calculations from the model are done here------------------%
-StatsOfCells = CalculateTheFillRanges(CellularData);
+StatsOfCells = CalculateTheFillRanges(CellularData, tx);
 
 %------------ Rates calculated and stats for those rates------------------%
-ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p);
+ModelRates = CalculatingRatesFromLHSSampling(DataForRates, SampleSize, p, tx);
 
 %------------ Plotting lhs rates results------------------%
 PlottingFillPrm(ModelRates, StatsOfCells, tx, PlotType)
 
 %----------------------Plotting Model results-----------------------------%
-PlottingLHSResults(StatsOfCells, tx, PlotType)
+%PlottingLHSResults(StatsOfCells, tx, PlotType)
 
 
 

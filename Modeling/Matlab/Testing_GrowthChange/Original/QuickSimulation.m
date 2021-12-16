@@ -5,26 +5,26 @@ FileName = 'Data/ParameterSets.csv';
 EntryNumber = 27;
 p = GetParameters(EntryNumber, FileName);
 
-mu= p(1);%Thymic Naive
+mu= 0.407;%Thymic Naive
 z = p(2); %Prol Naive
 g = p(3); %Naive Death
 alpha = p(4); %Thymic Tregs
 c = p(5); %Naive Derived Tregs
 epsilon = p(6); %Treg Prol
 b_R = p(7); %Treg Death
-beta =0.312; %Activation Rate
+beta =p(8); %Activation Rate
 a = p(9); %Activated Prol
 b_T = p(10); %ActT Death
 e_T = p(11); %ActT Consumption
 e_R = p(12); %Treg Consumption
 kA = p(13); %Beta Suppression
-j = 3.2156e-07; %Deactivation
+j = 6.2156e-07; %Deactivation
 kB = p(15); %Treg Death Suppression
 n = p(16);
 d = p(17); %IL-2 production Rate
-nK = p(19); %Naive Carrying Capacity
-rK = p(20); %Treg Carrying Capacity
-Ki = 0.2;%Half rate for activation suppression boost
+nK = 1835988; %Naive Carrying Capacity
+rK = 10459000; %Treg Carrying Capacity
+Ki = p(21);%Half rate for activation suppression boost
 Kj = p(22);% Half rate for deactivation boost
 dKO = p(23);
 
@@ -58,7 +58,7 @@ dKO = p(23);
 %Do not change this order
 p0 = [alpha, a, kA, e_T, e_R, g, b_T, b_R, epsilon, mu, beta, c, kB, j, z, n, d, nK, rK, Ki, Kj, dKO];
 
-tx = 0:432; %Maximum amount of time - 18 days
+tx = 0:1000; %Maximum amount of time - 18 days
 
 Genotype = [1, 2];
 
@@ -67,7 +67,7 @@ for i = Genotype
 end
 
 
-PlottingEverything(p0)
+% PlottingEverything(p0)
 
 %%
 global  WTerror KOerror
@@ -95,8 +95,13 @@ parameterStruct.KnockOut.ProlData = parameterStruct.KnockOut.ProlData(:,{ 'Naive
 
 
 GrowthObjective(p0, parameterStruct);
-error = WTerror + KOerror;
 
+%%
+
+% Saving parameters to parameterset.csv
+
+
+error = WTerror + KOerror;
 %-----Change this for saving files in a different location-----%
 FileLocation = './Data/ParameterSets.csv';
 %---------------------------------------------------------------------------%
@@ -118,6 +123,9 @@ dlmwrite(FileLocation ,parameters,'delimiter', ',',  'precision', 16, '-append')
 disp(['Entry Number - ' num2str(EntryNumber)])
 
 %%
+
+% Saving the simulation results to compare to data in R
+
 ModelDataWT = SimulateGrowth(p0, 1);
 csvwrite('~/my.work/PhD/HomestaticExpansionProject/Code/Stats plots and data management/ModelOutputWT.csv', ModelDataWT)
 
