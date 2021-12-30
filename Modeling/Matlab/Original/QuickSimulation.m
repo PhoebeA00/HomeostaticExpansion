@@ -27,7 +27,7 @@ rK = p(20); %Treg Carrying Capacity
 Ki = p(21);%Half rate for activation suppression boost
 Kj = p(22);% Half rate for deactivation boost
 dKO = p(23);
-%}
+
 %{
 Keeping this here if I want to replace the top parameter set with normal
 values
